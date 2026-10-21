@@ -1,0 +1,16 @@
+node_modules/
+.npm-cache/
+.expo/
+dist/
+dist-android/
+dist-web/
+coverage/
+*.log
+/*preview*.jpg
+.DS_Store
+.local-git-backups/
+.env
+.env.*
+!.env.example
+*firebase-adminsdk*.json
+*.tsbuildinfo

@@ -1,0 +1,7 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Profile reads/writes go through the token-verified Node API.
+    match /{document=**} { allow read, write: if false; }
+  }
+}

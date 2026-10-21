@@ -1,0 +1,17 @@
+{
+  "name": "balaqai-api",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "start": "node --env-file-if-exists=.env index.js",
+    "dev": "node --env-file-if-exists=.env --watch index.js",
+    "test": "node --test test/*.test.js"
+  },
+  "engines": {
+    "node": ">=22.13.0"
+  },
+  "dependencies": {
+    "firebase-admin": "^14.5.0"
+  }
+}

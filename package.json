@@ -1,0 +1,9 @@
+{
+  "name": "balaqai-web",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": { "node": "24.x" },
+  "scripts": { "build": "node scripts/build-web.mjs", "test": "npm --prefix server test" },
+  "dependencies": {}
+}

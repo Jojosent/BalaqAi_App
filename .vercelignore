@@ -1,0 +1,13 @@
+.git
+.local-git-backups
+.npm-cache
+**/node_modules
+**/.expo
+**/.claude
+**/dist-android
+**/dist-web
+**/.env
+**/.env.*
+**/*firebase-adminsdk*.json
+**/*.log
+/*preview*.jpg

@@ -38,7 +38,7 @@ export function AuthFlowProvider({ children }: PropsWithChildren) {
       setData(loaded); current.current = loaded; lastSaved.current = JSON.stringify(loaded);
       if (loaded.pregnancyStart) setPregnancyDraft({ method: 'lmp', lmp: keyToInput(loaded.pregnancyStart), weeks: '', days: '' });
       setDataReady(true); setSyncStatus('saved');
-    } catch (reason) { console.warn('Profile load failed:', reason instanceof Error ? reason.message : 'unknown'); if (mounted.current) { setSyncStatus('error'); setSyncError('Деректер жүктелмеді. Сервер байланысын тексеріп, қайталаңыз.'); } }
+    } catch (reason) { console.warn('Profile load failed:', reason instanceof Error ? reason.message : 'unknown'); if (mounted.current) { setSyncStatus('error'); setSyncError('Деректер жүктелмеді. Интернет байланысын тексеріп, қайталаңыз.'); } }
   }, [user, verified]);
   useEffect(() => { const task = setTimeout(() => { void reloadData(); }, 0); return () => clearTimeout(task); }, [reloadData]);
   const saveNow = useCallback(async () => {

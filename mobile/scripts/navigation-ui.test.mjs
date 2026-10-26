@@ -12,10 +12,10 @@ const require = createRequire(import.meta.url);
 const root = path.resolve(import.meta.dirname, '..', 'src');
 let language = 'kk', buttons = [], history = ['/home'];
 const cache = new Map();
-function native(tag) { return function Native({ children, onPress, accessibilityLabel, style, ...props }) { if (onPress) buttons.push({ label: accessibilityLabel || '', onPress }); return React.createElement(tag, { ...(tag === 'button' ? { type: 'button' } : {}), ...(accessibilityLabel ? { 'aria-label': accessibilityLabel } : {}) }, children); }; }
+function native(tag) { return function Native({ children, onPress, accessibilityLabel, style, ...props }) { if (onPress) buttons.push({ label: accessibilityLabel || '', onPress, role: props.accessibilityRole, checked: props.accessibilityState?.checked }); return React.createElement(tag, { ...(tag === 'button' ? { type: 'button' } : {}), ...(accessibilityLabel ? { 'aria-label': accessibilityLabel } : {}) }, children); }; }
 const NativeView = native('div'), NativeText = native('span');
 const nativeApi = { View: NativeView, Text: NativeText, TextInput: native('input'), Image: native('div'), Pressable: native('button'), ScrollView: NativeView, Modal: ({ visible, children }) => visible ? children : null, KeyboardAvoidingView: NativeView, Platform: { OS: 'web' }, Linking: {}, Share: {}, useWindowDimensions: () => ({ width: 375, height: 812 }), StyleSheet: { create: styles => styles, absoluteFill: { position: 'absolute', inset: 0 } } };
-const flow = { profile: { name: 'Fixture', birthday: '01.01.1998', city: 'Астана' }, stage: 'pregnant', pregnancyStart: '2026-10-10', pregnancyNotes: { doctor: '', notes: '' }, checklist: [], trackingFolate: false, saveNow: async () => {}, syncStatus: 'saved' };
+const flow = { profile: { name: 'Fixture', birthday: '01.01.1998', city: 'Астана' }, stage: 'pregnant', pregnancyStart: '2026-10-10', pregnancyNotes: { doctor: '', notes: '' }, checklist: [], trackingFolate: false, saveNow: async () => {}, syncStatus: 'saved', toggleChecklist: id => { flow.checklist = flow.checklist.includes(id) ? flow.checklist.filter(item => item !== id) : [...flow.checklist, id]; } };
 const router = { push: value => history.push(typeof value === 'string' ? value : value.pathname), canGoBack: () => history.length > 1, back: () => history.pop(), replace: value => { history[history.length - 1] = value; } };
 function load(file) {
  const absolute = path.resolve(file);
@@ -47,11 +47,13 @@ const PlanningHome = load(path.join(root, 'components/HomeContent.tsx')).default
 const Tracker = load(path.join(root, 'app/tracker.tsx')).default;
 const Tools = load(path.join(root, 'app/tracking-tools.tsx')).default;
 const Shop = load(path.join(root, 'app/(main)/shop.tsx')).default;
+const Tasks = load(path.join(root, 'app/tasks.tsx'));
+const prenatal = load(path.join(root, 'data/prenatalTasks.ts'));
 const Connect = load(path.join(root, 'app/connect.tsx')).default;
 function render(component) { buttons = []; return renderToStaticMarkup(React.createElement(component)); }
 const normalize = text => text.replace(/\s+/g, ' ').trim();
 test('mounted and hidden screen copies have isolated gradients and matching paint references', () => {
- const markup = renderToStaticMarkup(React.createElement(React.Fragment, null, ...[PregnantHome, PlanningHome, PregnantHome, Shop, Shop, Tracker, Tracker, Tools, Tools, Connect, Connect].map((component, key) => React.createElement(component, { key }))));
+ const markup = renderToStaticMarkup(React.createElement(React.Fragment, null, ...[PregnantHome, PlanningHome, PregnantHome, Shop, Shop, Tracker, Tracker, Tools, Tools, Connect, Connect, Tasks.default, Tasks.default].map((component, key) => React.createElement(component, { key }))));
  const ids = [...markup.matchAll(/<linearGradient[^>]+id="([^"]+)"/g)].map(match => match[1]);
  assert.ok(ids.length >= 12); assert.equal(new Set(ids).size, ids.length);
  for (const svg of markup.matchAll(/<svg\b[\s\S]*?<\/svg>/g)) {
@@ -90,4 +92,24 @@ test('home actions retain their destination and tracker/tools return to home in 
    const back = buttons.find(button => button.label === label); assert.ok(back); back.onPress(); assert.deepEqual(history, ['/home']);
   }
  }
+});
+
+test('new task cards expand without overwriting personal checklist marks', () => {
+ const personalMark = 'todo:first:default:0';
+ for (const lang of ['kk', 'ru', 'en']) {
+  language = lang;
+  const page = render(Tasks.default); assert.ok(page.includes(load(path.join(root, 'i18n/core.ts')).translate('Тапсырмалар тізімі', lang)));
+  for (const section of prenatal.prenatalSections) {
+   flow.checklist = [personalMark]; let toggled = false;
+   render(() => React.createElement(Tasks.TaskSection, { section, open: false, onToggle: () => { toggled = true; } }));
+   assert.equal(buttons.filter(button => button.role === 'checkbox').length, 0);
+   buttons.find(button => button.role === 'button').onPress(); assert.ok(toggled);
+   render(() => React.createElement(Tasks.TaskSection, { section, open: true, onToggle: () => {} }));
+   const checks = buttons.filter(button => button.role === 'checkbox'); assert.equal(checks.length, section.tasks.length);
+   checks[0].onPress(); assert.ok(flow.checklist.includes(prenatal.prenatalTaskKey(section.id, section.tasks[0].id))); assert.ok(flow.checklist.includes(personalMark));
+   render(() => React.createElement(Tasks.TaskSection, { section, open: true, onToggle: () => {} }));
+   const saved = buttons.find(button => button.role === 'checkbox'); assert.equal(saved.checked, true); saved.onPress(); assert.deepEqual(flow.checklist, [personalMark]);
+  }
+ }
+ flow.checklist = [];
 });

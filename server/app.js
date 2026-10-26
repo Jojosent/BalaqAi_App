@@ -21,8 +21,6 @@ export function createHandler({ auth, database, allowedOrigins = ['http://localh
     let identity;
     try { identity = await auth.verifyIdToken(token, true); }
     catch { return send(401, { error: 'Invalid or expired token' }); }
-    const trustedProvider = identity.firebase?.sign_in_provider;
-    if (!identity.email_verified && !['google.com', 'apple.com'].includes(trustedProvider)) return send(403, { error: 'Email verification required', code: 'EMAIL_NOT_VERIFIED' });
     // The document path always comes from the verified token, never the request body.
     const reference = database.collection('users').doc(identity.uid);
     try {

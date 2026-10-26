@@ -6,9 +6,9 @@ import { AuthGate } from '../components/AuthGate';
 import { SyncBanner } from '../components/SyncBanner';
 
 function Application() {
-  const { user, verified } = useSession();
+  const { user } = useSession();
   return (
-    <AuthFlowProvider key={`${user?.uid || 'signed-out'}:${verified}`}>
+    <AuthFlowProvider key={`${user?.uid || 'signed-out'}`}>
       <StatusBar hidden />
       <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: '#c9e9e5' } }} />
       <AuthGate />

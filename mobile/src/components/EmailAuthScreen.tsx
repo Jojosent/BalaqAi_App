@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { router } from 'expo-router';
 import { Keyboard, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
-import { createUserWithEmailAndPassword, sendEmailVerification, signInWithEmailAndPassword } from 'firebase/auth';
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../services/firebase';
 import { authError } from '../services/authErrors';
 import { AuthScreen, PrimaryButton, RegisterGirl, LoginGirl, SocialButtons, useAuthSize } from './AuthUI';
@@ -24,9 +24,9 @@ export function EmailAuthScreen({ mode }: { mode: 'register' | 'login' }) {
     Keyboard.dismiss(); setBusy(true); setError('');
     try {
       if (login) await signInWithEmailAndPassword(auth, address, password);
-      else { const result = await createUserWithEmailAndPassword(auth, address, password); await sendEmailVerification(result.user); }
+      else await createUserWithEmailAndPassword(auth, address, password);
       setPassword(''); setConfirm('');
-      router.replace('/verify');
+      router.replace('/login');
     } catch (reason) { setError(authError(reason)); }
     finally { setBusy(false); }
   }

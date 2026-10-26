@@ -22,20 +22,20 @@ const details: Record<string, { title: string; body: string; source?: string }> 
   geneticist: { title: 'Консультация генетика', body: 'Генетик поможет обсудить семейную историю и результаты исследований. Можно отметить консультацию в личном списке. Автоматического назначения анализов и записи на приём здесь нет.' },
 };
 
-function PregnancyHeader({ onSearch, scale: s }: { onSearch: () => void; scale: (n: number) => number }) {
+export function PregnancyHeader({ onSearch, scale: s, planning = false }: { onSearch: () => void; scale: (n: number) => number; planning?: boolean }) {
   const { pregnancyStart } = useAuthFlow();
   const today = useToday();
   const result = pregnancyStart ? calculatePregnancy(pregnancyStart, today) : null;
   const { pageWidth } = useAuthSize();
   const insets = useSafeAreaInsets();
   const top = Math.max(insets.top + s(18), s(42));
-  const height = s(324) + Math.max(0, top - s(42));
+  const height = s(planning ? 115 : 324) + Math.max(0, top - s(42));
   const radius = 79, circumference = 2 * Math.PI * radius;
   return <View style={{ height, width: '100%', paddingTop: top }}>
     <Svg width={pageWidth} height={height} style={StyleSheet.absoluteFill} viewBox={`0 0 ${pageWidth} ${height}`}><Defs><LinearGradient id="hero" x1="0" y1="0" x2="1" y2="1"><Stop offset="0" stopColor="#4ebeb1" /><Stop offset="1" stopColor="#007366" /></LinearGradient></Defs><Path d={`M0 0H${pageWidth}V${height - s(18)}Q${pageWidth / 2} ${height + s(18)} 0 ${height - s(22)}Z`} fill="url(#hero)" /></Svg>
     <Text accessibilityRole="header" style={{ textAlign: 'center', color: '#fff', fontSize: s(20), fontWeight: '600', letterSpacing: 1 }}>Басты бет</Text>
     <Pressable accessibilityRole="button" accessibilityLabel="Іздеуді ашу" onPress={onSearch} style={{ position: 'absolute', right: s(8), top: top - s(6), width: 44, height: 44, alignItems: 'center', justifyContent: 'center' }}><MainIcon name="search" color="#fff" size={s(22)} /></Pressable>
-    <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: s(22), paddingHorizontal: s(12) }}>
+    {!planning ? <><View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: s(22), paddingHorizontal: s(12) }}>
       <View style={{ flex: 1, alignItems: 'center' }}><Text style={ [styles.headerStat, { fontSize: s(20) }] }>{result ? `${(result.progress * 100).toFixed(1)}%` : '—'}</Text><Text style={[styles.headerCaption, { fontSize: s(8) }]}>өтті</Text></View>
       <View accessibilityLabel={result ? `${result.weeks} апта ${result.days} күн` : 'Мерзім енгізілмеген'} style={{ width: s(166), height: s(166), alignItems: 'center', justifyContent: 'center' }}>
         <Svg width={s(166)} height={s(166)} viewBox="0 0 166 166" style={StyleSheet.absoluteFill}><Circle cx="83" cy="83" r={radius} fill="none" stroke="#66c7b9" strokeOpacity={0.55} strokeWidth={2.5} /><Circle cx="83" cy="83" r={radius} fill="none" stroke="#fff" strokeWidth={2.5} strokeDasharray={`${circumference}`} strokeDashoffset={circumference * (1 - (result?.progress || 0))} transform="rotate(-90 83 83)" /></Svg>
@@ -43,7 +43,7 @@ function PregnancyHeader({ onSearch, scale: s }: { onSearch: () => void; scale: 
       </View>
       <View style={{ flex: 1, alignItems: 'center' }}><Text style={[styles.headerStat, { fontSize: s(20) }]}>{result ? Math.max(0, 280 - result.totalDays) : '—'}</Text><Text style={[styles.headerCaption, { fontSize: s(8) }]}>күн қалды</Text></View>
     </View>
-    <Pressable accessibilityRole="button" onPress={() => router.push(result ? '/tracker' : '/pregnancy-dating')} style={({ pressed }) => ({ alignSelf: 'center', paddingHorizontal: s(18), paddingVertical: s(7), borderRadius: s(22), backgroundColor: '#ffffff30', marginTop: s(9), opacity: pressed ? 0.7 : 1 })}><Text style={{ color: '#e1f8f1', fontSize: s(13), fontWeight: '600' }}>{result ? 'Толығырақ' : 'Мерзімді енгізу'} →</Text></Pressable>
+    <Pressable accessibilityRole="button" onPress={() => router.push(result ? '/tracker' : '/pregnancy-dating')} style={({ pressed }) => ({ alignSelf: 'center', paddingHorizontal: s(18), paddingVertical: s(7), borderRadius: s(22), backgroundColor: '#ffffff30', marginTop: s(9), opacity: pressed ? 0.7 : 1 })}><Text style={{ color: '#e1f8f1', fontSize: s(13), fontWeight: '600' }}>{result ? 'Толығырақ' : 'Мерзімді енгізу'} →</Text></Pressable></> : null}
   </View>;
 }
 
@@ -60,7 +60,7 @@ function Banner({ section, s, tracking, onPress }: { section: typeof sections[nu
 export default function HomeContent() {
   const { s } = useAuthSize();
   const today = useToday();
-  const { checklist, toggleChecklist, trackingFolate, setTrackingFolate } = useAuthFlow();
+  const { stage, checklist, toggleChecklist, trackingFolate, setTrackingFolate } = useAuthFlow();
   const [searchOpen, setSearchOpen] = useState(false);
   const [query, setQuery] = useState('');
   const [detail, setDetail] = useState<string | null>(null);
@@ -69,7 +69,7 @@ export default function HomeContent() {
   const info = detail ? details[detail] : null;
 
   return <View style={{ flex: 1, backgroundColor: '#fff' }}><ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: s(28) }}>
-    <PregnancyHeader scale={s} onSearch={() => { setSearchOpen(value => !value); setQuery(''); }} />
+    <PregnancyHeader planning={stage === 'planning'} scale={s} onSearch={() => { setSearchOpen(value => !value); setQuery(''); }} />
     <View style={{ paddingHorizontal: s(24), paddingTop: s(47) }}>
       {searchOpen ? <View style={{ marginBottom: s(20) }}><TextInput accessibilityLabel="Іздеу" placeholder="Іздеу / Поиск" placeholderTextColor="#89a49b" value={query} onChangeText={setQuery} style={{ backgroundColor: '#eff7f3', borderRadius: 18, padding: 14, color: '#174e49', fontSize: 15, outlineWidth: 0 }} /><Text style={{ color: '#8a9d95', fontSize: 11, marginTop: 7 }}>Карточкалар мен тізімнен іздеу</Text></View> : null}
       {filtered.map(section => <View key={section.id} style={{ marginBottom: s(21) }}>

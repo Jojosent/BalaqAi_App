@@ -21,7 +21,7 @@ try {
   }
   const headers = token => ({ Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' });
   assert.equal((await fetch(`${base}/v1/me`)).status, 401);
-  assert.equal((await fetch(`${base}/v1/me`, { headers: headers(tokens[2]) })).status, 403);
+  assert.equal((await fetch(`${base}/v1/me`, { headers: headers(tokens[2]) })).status, 200);
   const fixture = { profile: { name: 'Synthetic E2E', birthday: '', city: '' }, stage: null, pregnancyStart: null, pregnancyNotes: { doctor: '', notes: 'Disposable test data' }, checklist: [], trackingFolate: false };
   assert.equal((await fetch(`${base}/v1/me`, { method: 'PUT', headers: headers(tokens[0]), body: JSON.stringify(fixture) })).status, 200);
   assert.deepEqual((await (await fetch(`${base}/v1/me`, { headers: headers(tokens[0]) })).json()).data, fixture);

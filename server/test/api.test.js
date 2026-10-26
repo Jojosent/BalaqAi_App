@@ -14,7 +14,9 @@ test('API enforces identity, validation and per-user storage', async t => {
   const call = (token, method = 'GET', body, extra = {}) => fetch(`${base}/v1/me`, { method, headers: { ...(token ? { Authorization: `Bearer ${token}` } : {}), 'Content-Type': 'application/json', ...extra }, body: body === undefined ? undefined : JSON.stringify(body) });
   assert.equal((await call()).status, 401);
   assert.equal((await call('bad')).status, 401);
-  assert.equal((await call('unverified')).status, 403);
+  assert.equal((await call('unverified', 'PUT', fixture)).status, 200);
+  assert.deepEqual((await (await call('unverified')).json()).data, fixture);
+  assert.equal((await (await call('a')).json()).data, null);
   assert.equal((await call('a', 'GET', undefined, { Origin: 'https://evil.example' })).status, 403);
   assert.equal((await call('a', 'PUT', { ...fixture, uid: 'b' })).status, 400);
   assert.equal((await call('a', 'PUT', { ...fixture, profile: { ...fixture.profile, name: 5 } })).status, 400);
@@ -24,6 +26,11 @@ test('API enforces identity, validation and per-user storage', async t => {
   assert.equal((await call('a', 'PUT', fixture)).status, 200);
   assert.deepEqual((await (await call('a')).json()).data, fixture);
   assert.equal((await (await call('b')).json()).data, null);
+  const customTasks = { first: ['Prepare questions'], second: [], third: [], bag: [], home: [] };
+  assert.equal((await call('a', 'PUT', { ...fixture, customTasks })).status, 200);
+  assert.deepEqual((await (await call('a')).json()).data.customTasks, customTasks);
+  assert.equal((await call('a', 'PUT', { ...fixture, customTasks: { ...customTasks, first: [5] } })).status, 400);
+  assert.equal((await call('a', 'PUT', { ...fixture, customTasks: { ...customTasks, bag: Array(11).fill('Task') } })).status, 400);
   assert.equal((await call('a', 'PUT', { ...fixture, profile: { ...fixture.profile, name: 'x'.repeat(20_000) } })).status, 413);
   const malformed = await fetch(`${base}/v1/me`, { method: 'PUT', headers: { Authorization: 'Bearer a', 'Content-Type': 'application/json' }, body: '{' });
   assert.equal(malformed.status, 400);

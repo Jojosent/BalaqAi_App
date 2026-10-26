@@ -1,20 +1,17 @@
-import { useState } from 'react';
 import { router } from 'expo-router';
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 import { useAuthFlow, type LifeStage } from '../components/AuthFlow';
-import { AuthScreen, Notice, PrimaryButton, useAuthSize } from '../components/AuthUI';
+import { AuthScreen, PrimaryButton, useAuthSize } from '../components/AuthUI';
 
 const options = [
   { id: 'pregnant' as const, title: 'Жүктімін', description: 'Жүктілік мерзімін бақылап,\nпайдалы ақпарат алыңыз.', image: require('../../assets/images/mom2.png'), background: '#fff6f3', circle: '#f8e3dd', accent: '#cc978d' },
   { id: 'planning' as const, title: 'Жүктілікті жоспарлап жүрмін', description: 'Дайындық кезеңінде қолдау\nмен кеңестер алыңыз.', image: require('../../assets/images/grass1.png'), background: '#effaf6', circle: '#d9f1e9', accent: '#4da89a' },
-  { id: 'postpartum' as const, title: 'Босандым', description: 'Бала күтімі бойынша\nақпарат пен қолдау алыңыз.', image: require('../../assets/images/mom3.png'), background: '#f7f2fe', circle: '#e9e1f5', accent: '#9b88b7' },
 ];
 
 export default function StageScreen() {
   const { s } = useAuthSize();
   const { stage, setStage } = useAuthFlow();
-  const [confirmed, setConfirmed] = useState(false);
   function select(value: LifeStage) { setStage(value); }
 
   return <AuthScreen>
@@ -39,10 +36,9 @@ export default function StageScreen() {
           </Pressable>;
         })}
       </View>
-      <View style={{ width: '100%', paddingHorizontal: s(8), marginTop: s(16) }}><PrimaryButton title="Жалғастыру" scale={s(1)} disabled={!stage} onPress={() => { if (stage === 'pregnant') router.push('/pregnancy-dating'); else if (stage) setConfirmed(true); }} /></View>
+      <View style={{ width: '100%', paddingHorizontal: s(8), marginTop: s(16) }}><PrimaryButton title="Жалғастыру" scale={s(1)} disabled={!options.some(option => option.id === stage)} onPress={() => { if (stage === 'pregnant') router.push('/pregnancy-dating'); else if (stage === 'planning') router.replace('/home'); }} /></View>
       <Text style={{ color: '#6c9187', fontSize: s(10), textAlign: 'center', marginTop: s(12) }}>Таңдауыңыз жеке аккаунтыңызға сақталады</Text>
     </View>
-    {confirmed ? <Notice title="Таңдауыңыз сақталды" body={`${options.find(option => option.id === stage)?.title}. Келесі қадам жақында қосылады.`} onClose={() => setConfirmed(false)} /> : null}
   </AuthScreen>;
 }
 

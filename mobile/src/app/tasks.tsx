@@ -1,6 +1,7 @@
+import { Pressable, Text, TextInput, View } from '../i18n/Localized';
 import { useState } from 'react';
 import { router } from 'expo-router';
-import { Keyboard, Pressable, ScrollView, Text, TextInput, View } from 'react-native';
+import { Keyboard, ScrollView } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Svg, { Path, Rect } from 'react-native-svg';
 import { useAuthFlow } from '../components/AuthFlow';
@@ -29,7 +30,7 @@ export default function TasksScreen() {
     const key = taskKey(group, index, isCustom), checked = checklist.includes(key);
     return <Pressable key={key} accessibilityRole="checkbox" accessibilityLabel={title} accessibilityState={{ checked }} aria-checked={checked} onPress={() => toggleChecklist(key)} style={({ pressed }) => ({ flexDirection: 'row', alignItems: 'center', gap: s(16), minHeight: s(59), paddingVertical: s(10), opacity: pressed ? 0.75 : 1 })}>
       <View style={{ width: s(29), height: s(29), borderRadius: s(16), borderWidth: 1, borderColor: checked ? '#48bbae' : '#ff9b98', backgroundColor: checked ? '#48bbae' : '#fff', alignItems: 'center', justifyContent: 'center' }}>{checked ? <Text style={{ color: '#fff', fontSize: s(20) }}>✓</Text> : null}</View>
-      <Text style={{ flex: 1, color: checked ? '#929b98' : '#161918', fontSize: s(13), lineHeight: s(17), textDecorationLine: checked ? 'line-through' : 'none' }}>{title}</Text>
+      <Text verbatim={isCustom} style={{ flex: 1, color: checked ? '#929b98' : '#161918', fontSize: s(13), lineHeight: s(17), textDecorationLine: checked ? 'line-through' : 'none' }}>{title}</Text>
     </Pressable>;
   }
   return <View style={{ flex: 1, alignItems: 'center', backgroundColor: '#fff' }}><View style={{ width: pageWidth, flex: 1 }}>

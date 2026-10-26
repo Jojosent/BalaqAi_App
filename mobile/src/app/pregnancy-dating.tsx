@@ -1,6 +1,7 @@
+import { Pressable, Text, TextInput, Image, View } from '../i18n/Localized';
 import { useState } from 'react';
 import { router, useLocalSearchParams } from 'expo-router';
-import { Image, Keyboard, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Keyboard, ScrollView, StyleSheet } from 'react-native';
 import { useAuthFlow } from '../components/AuthFlow';
 import { AuthScreen, colors, PrimaryButton, useAuthSize } from '../components/AuthUI';
 import { DatePicker, formatBirthday, PickerShell } from '../components/ProfilePickers';

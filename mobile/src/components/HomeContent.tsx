@@ -1,6 +1,8 @@
+import { useLanguage } from '../i18n/Language';
+import { Pressable, Text, TextInput, Image, View } from '../i18n/Localized';
 import { useState } from 'react';
 import { router } from 'expo-router';
-import { Image, Linking, Modal, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Linking, Modal, ScrollView, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Svg, { Circle, Defs, LinearGradient, Path, Stop } from 'react-native-svg';
 import { useAuthFlow } from './AuthFlow';
@@ -58,6 +60,7 @@ function Banner({ section, s, tracking, onPress }: { section: typeof sections[nu
 }
 
 export default function HomeContent() {
+  const { t } = useLanguage();
   const { s } = useAuthSize();
   const today = useToday();
   const { stage, checklist, toggleChecklist, trackingFolate, setTrackingFolate } = useAuthFlow();
@@ -65,7 +68,7 @@ export default function HomeContent() {
   const [query, setQuery] = useState('');
   const [detail, setDetail] = useState<string | null>(null);
   const q = query.trim().toLocaleLowerCase();
-  const filtered = sections.filter(section => `${section.title} ${section.button} ${section.rows.map(row => row.title).join(' ')}`.toLocaleLowerCase().includes(q));
+  const filtered = sections.filter(section => `${t(section.title)} ${t(section.button)} ${section.rows.map(row => t(row.title)).join(' ')}`.toLocaleLowerCase().includes(q));
   const info = detail ? details[detail] : null;
 
   return <View style={{ flex: 1, backgroundColor: '#fff' }}><ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: s(28) }}>

@@ -1,6 +1,9 @@
+import { useLanguage } from '../i18n/Language';
+import { getLocale } from '../i18n/core';
+import { Pressable, Text, TextInput, Image, View } from '../i18n/Localized';
 import { useEffect, useState } from 'react';
 import { router } from 'expo-router';
-import { ActivityIndicator, Image, Keyboard, Pressable, ScrollView, Text, TextInput, View } from 'react-native';
+import { ActivityIndicator, Keyboard, ScrollView } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Svg, { Defs, LinearGradient, Rect, Stop } from 'react-native-svg';
 import { useAuthSize, Notice } from '../components/AuthUI';
@@ -10,8 +13,9 @@ import { calculatePregnancy, todayKey } from '../utils/pregnancy';
 import { loadWeightTracker, saveWeightTracker } from '../services/weight';
 import { addWeightEntry, parseWeight, weightText, type WeightEntry, type WeightTracker } from '../utils/weight';
 
-function dayText(at: number) { const date = new Date(at); return date.toDateString() === new Date().toDateString() ? 'Бүгін' : new Intl.DateTimeFormat('kk-KZ', { day: '2-digit', month: 'short' }).format(date); }
+function dayText(at: number) { const date = new Date(at); return date.toDateString() === new Date().toDateString() ? 'Бүгін' : new Intl.DateTimeFormat(getLocale(), { day: '2-digit', month: 'short' }).format(date); }
 export default function WeightTrackerScreen() {
+  useLanguage();
   const { s, pageWidth } = useAuthSize();
   const insets = useSafeAreaInsets();
   const { user } = useSession();

@@ -1,5 +1,6 @@
+import { Pressable, Text, Image, View } from '../i18n/Localized';
 import { router } from 'expo-router';
-import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 import { useAuthFlow, type LifeStage } from '../components/AuthFlow';
 import { AuthScreen, PrimaryButton, useAuthSize } from '../components/AuthUI';

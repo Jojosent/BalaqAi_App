@@ -1,5 +1,6 @@
+import { Text, TextInput, View } from '../i18n/Localized';
 import { useState } from 'react';
-import { Text, TextInput, View } from 'react-native';
+
 import { sendPasswordResetEmail } from 'firebase/auth';
 import { auth } from '../services/firebase';
 import { authError } from '../services/authErrors';

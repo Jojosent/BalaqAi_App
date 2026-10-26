@@ -3,6 +3,7 @@ import { StatusBar } from 'expo-status-bar';
 import { AuthFlowProvider } from '../components/AuthFlow';
 import { SessionProvider, useSession } from '../components/Session';
 import { AuthGate } from '../components/AuthGate';
+import { LanguageProvider } from '../i18n/Language';
 import { SyncBanner } from '../components/SyncBanner';
 
 function Application() {
@@ -16,4 +17,4 @@ function Application() {
     </AuthFlowProvider>
   );
 }
-export default function RootLayout() { return <SessionProvider><Application /></SessionProvider>; }
+export default function RootLayout() { return <SessionProvider><LanguageProvider><Application /></LanguageProvider></SessionProvider>; }

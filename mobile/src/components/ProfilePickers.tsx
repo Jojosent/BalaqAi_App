@@ -1,5 +1,7 @@
+import { Pressable, Text, TextInput, View } from '../i18n/Localized';
+import { useLanguage } from '../i18n/Language';
 import { useState } from 'react';
-import { Modal, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Modal, ScrollView, StyleSheet } from 'react-native';
 import { PrimaryButton, colors } from './AuthUI';
 
 const months = ['Қаңтар', 'Ақпан', 'Наурыз', 'Сәуір', 'Мамыр', 'Маусым', 'Шілде', 'Тамыз', 'Қыркүйек', 'Қазан', 'Қараша', 'Желтоқсан'];
@@ -60,13 +62,14 @@ export function DatePicker({ value, onSelect, onClose, title = 'Туған кү�
 
 export function CityPicker({ onSelect, onClose }: { onSelect: (city: string) => void; onClose: () => void }) {
   const [search, setSearch] = useState('');
+  const { t } = useLanguage();
   const query = search.trim();
-  const filtered = cities.filter(city => city.toLocaleLowerCase().includes(query.toLocaleLowerCase()));
+  const filtered = cities.filter(city => `${city} ${t(city)}`.toLocaleLowerCase().includes(query.toLocaleLowerCase()));
   return <PickerShell title="Қалаңызды таңдаңыз" onClose={onClose}>
     <TextInput accessibilityLabel="Қаланы іздеу" placeholder="Қаланы іздеу" value={search} onChangeText={setSearch} maxLength={80} autoCapitalize="words" style={styles.search} placeholderTextColor="#8da7a1" />
     <ScrollView style={{ maxHeight: 320 }} keyboardShouldPersistTaps="handled">
       {filtered.map(city => <Pressable key={city} accessibilityRole="button" onPress={() => onSelect(city)} style={styles.city}><Text style={{ color: colors.dark, fontSize: 16 }}>{city}</Text><Text style={{ color: colors.teal }}>›</Text></Pressable>)}
-      {query.length >= 2 && !cities.some(city => city.toLocaleLowerCase() === query.toLocaleLowerCase()) ? <Pressable accessibilityRole="button" onPress={() => onSelect(query)} style={styles.city}><Text style={{ color: colors.teal, fontSize: 15 }}>{query} — осы қаланы таңдау</Text></Pressable> : null}
+      {query.length >= 2 && !cities.some(city => t(city).toLocaleLowerCase() === query.toLocaleLowerCase() || city.toLocaleLowerCase() === query.toLocaleLowerCase()) ? <Pressable accessibilityRole="button" onPress={() => onSelect(query)} style={styles.city}><Text style={{ color: colors.teal, fontSize: 15 }}>{query} — осы қаланы таңдау</Text></Pressable> : null}
       {!filtered.length && query.length < 2 ? <Text style={styles.columnLabel}>Қалаңыздың атауын енгізіңіз.</Text> : null}
     </ScrollView>
   </PickerShell>;

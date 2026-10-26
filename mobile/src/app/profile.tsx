@@ -1,6 +1,7 @@
+import { Pressable, Text, TextInput, Image, View } from '../i18n/Localized';
 import { useState } from 'react';
 import { router, useLocalSearchParams } from 'expo-router';
-import { Image, Keyboard, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Keyboard, StyleSheet } from 'react-native';
 import Svg, { Path, Circle } from 'react-native-svg';
 import { AuthScreen, colors, PrimaryButton, useAuthSize } from '../components/AuthUI';
 import { useAuthFlow } from '../components/AuthFlow';

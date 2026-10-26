@@ -1,23 +1,16 @@
-import { useState } from 'react';
+import { Pressable, Text, Image, View } from '../i18n/Localized';
 import { router } from 'expo-router';
-import { Image, Modal, Pressable, ScrollView, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
+import { ScrollView, StyleSheet, useWindowDimensions } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Svg, { Path } from 'react-native-svg';
 import { ProviderIcon } from '../components/ProviderIcon';
 import { useAuthFlow } from '../components/AuthFlow';
 
-const steps = {
-  register: { title: 'Тіркелу', body: 'Тіркелу экраны келесі қадамда қосылады.' },
-  login: { title: 'Қош келдіңіз!', body: 'Аккаунтқа кіру экраны келесі қадамда қосылады.' },
-  google: { title: 'Google арқылы кіру', body: 'Google арқылы кіру әзірге қосылмаған.' },
-  apple: { title: 'Apple арқылы кіру', body: 'Apple арқылы кіру әзірге қосылмаған.' },
-};
 
 export default function WelcomeScreen() {
   const { setIntent } = useAuthFlow();
   const { width, height } = useWindowDimensions();
   const insets = useSafeAreaInsets();
-  const [selected, setSelected] = useState<keyof typeof steps | null>(null);
   const pageWidth = Math.min(width, 500);
   const u = pageWidth / 375;
   const pageHeight = Math.max(height, 754 * u);
@@ -63,17 +56,7 @@ export default function WelcomeScreen() {
         </ScrollView>
       </View>
 
-      <Modal visible={selected !== null} transparent animationType="fade" onRequestClose={() => setSelected(null)}>
-        <View style={styles.scrim}>
-          <Pressable style={StyleSheet.absoluteFill} accessibilityLabel="Жабу" onPress={() => setSelected(null)} />
-          <View accessibilityViewIsModal style={styles.dialog}>
-            <Text style={styles.dialogEyebrow}>BalaqAi</Text>
-            <Text accessibilityRole="header" style={styles.dialogTitle}>{selected && steps[selected].title}</Text>
-            <Text style={styles.dialogBody}>{selected && steps[selected].body}</Text>
-            <Pressable accessibilityRole="button" onPress={() => setSelected(null)} style={({ pressed }) => [styles.close, { opacity: pressed ? 0.8 : 1 }]}><Text style={styles.primaryLabel}>Түсінікті</Text></Pressable>
-          </View>
-        </View>
-      </Modal>
+
     </View>
   );
 }

@@ -1,6 +1,7 @@
+import { Pressable, Text, TextInput, View } from '../i18n/Localized';
 import { useState } from 'react';
 import { router } from 'expo-router';
-import { Keyboard, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Keyboard, StyleSheet } from 'react-native';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../services/firebase';
 import { authError } from '../services/authErrors';

@@ -30,8 +30,8 @@ export function validMoodEntry(value: unknown): value is MoodEntry {
   const entry = value as MoodEntry;
   return Object.keys(entry).length === 2 && Number.isSafeInteger(entry.at) && entry.at > 0 && entry.at <= 253402300799999 && moods.some(mood => mood.id === entry.mood);
 }
-export function moodDateText(at: number, now = Date.now()) {
+export function moodDateText(at: number, now = Date.now(), locale = 'kk-KZ') {
   const date = new Date(at);
-  const day = date.toDateString() === new Date(now).toDateString() ? 'Бүгін' : new Intl.DateTimeFormat('kk-KZ', { day: '2-digit', month: 'short' }).format(date);
-  return `${day} ${new Intl.DateTimeFormat('kk-KZ', { hour: '2-digit', minute: '2-digit' }).format(date)}`;
+  const day = date.toDateString() === new Date(now).toDateString() ? 'Бүгін' : new Intl.DateTimeFormat(locale, { day: '2-digit', month: 'short' }).format(date);
+  return `${day} ${new Intl.DateTimeFormat(locale, { hour: '2-digit', minute: '2-digit' }).format(date)}`;
 }

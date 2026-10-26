@@ -1,5 +1,6 @@
+import { Text } from '../i18n/Localized';
 import { useState } from 'react';
-import { Image, Text, View } from 'react-native';
+import { Image, View } from 'react-native';
 import { AuthScreen, PrimaryButton, useAuthSize } from './AuthUI';
 import { ProviderIcon } from './ProviderIcon';
 import { socialSignIn } from '../services/social';

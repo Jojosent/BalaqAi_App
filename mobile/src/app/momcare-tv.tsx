@@ -1,6 +1,8 @@
+import { Pressable, Text, TextInput, Image, View } from '../i18n/Localized';
+import { useLanguage } from '../i18n/Language';
 import { useState } from 'react';
 import { router } from 'expo-router';
-import { Image, Linking, Pressable, ScrollView, Text, TextInput, View } from 'react-native';
+import { Linking, ScrollView } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useAuthSize } from '../components/AuthUI';
 import { MainIcon } from '../components/MainIcon';
@@ -14,7 +16,8 @@ export default function MomcareTvScreen() {
   const [query, setQuery] = useState('');
   const [error, setError] = useState('');
   const [failedImages, setFailedImages] = useState<string[]>([]);
-  const videos = filterMomcareVideos(query, trimester);
+  const { t } = useLanguage();
+  const videos = filterMomcareVideos('', trimester).filter(video => `${t(video.title)} ${video.originalTitle} ${video.author}`.toLocaleLowerCase().includes(query.trim().toLocaleLowerCase()));
   const featuredWidth = pageWidth - s(64);
   function open(url: string) {
     setError('');
@@ -45,7 +48,7 @@ export default function MomcareTvScreen() {
         {videos.map(video => <View key={video.id} style={{ backgroundColor: '#fff', borderRadius: s(19), overflow: 'hidden', boxShadow: '0px 5px 10px rgba(80,35,42,0.14)' }}>
           <Pressable accessibilityRole="link" accessibilityLabel={`YouTube-та көру: ${video.title}`} onPress={() => open(youtubeVideoUrl(video.id))}>
             <View style={{ height: (pageWidth - s(44)) * 9 / 16, backgroundColor: '#c6e8df' }}>{thumbnail(video.id)}<View style={{ position: 'absolute', right: s(12), bottom: s(10), backgroundColor: '#000a', borderRadius: 8, padding: 6 }}><Text style={{ color: '#fff', fontSize: s(11) }}>▶ YouTube</Text></View></View>
-            <View style={{ padding: s(13), flexDirection: 'row', alignItems: 'flex-start', gap: s(10) }}><View style={{ width: s(30), height: s(30), borderRadius: 18, backgroundColor: '#e6f5f1', alignItems: 'center', justifyContent: 'center' }}><Text style={{ color: '#339e90', fontSize: s(10), fontWeight: '700' }}>{video.author === "Tommy's" ? 'T' : 'NHS'}</Text></View><View style={{ flex: 1 }}><Text style={{ color: '#202925', fontSize: s(14), lineHeight: s(19), fontWeight: '600' }}>{video.title}</Text><Text style={{ color: '#8b8f8d', fontSize: s(10), lineHeight: s(14), marginTop: s(4) }}>{video.originalTitle}{'\n'}{video.author} · English</Text></View></View>
+            <View style={{ padding: s(13), flexDirection: 'row', alignItems: 'flex-start', gap: s(10) }}><View style={{ width: s(30), height: s(30), borderRadius: 18, backgroundColor: '#e6f5f1', alignItems: 'center', justifyContent: 'center' }}><Text style={{ color: '#339e90', fontSize: s(10), fontWeight: '700' }}>{video.author === "Tommy's" ? 'T' : 'NHS'}</Text></View><View style={{ flex: 1 }}><Text style={{ color: '#202925', fontSize: s(14), lineHeight: s(19), fontWeight: '600' }}>{video.title}</Text><Text verbatim style={{ color: '#8b8f8d', fontSize: s(10), lineHeight: s(14), marginTop: s(4) }}>{video.originalTitle}{'\n'}{video.author} · English</Text></View></View>
           </Pressable>
           <Pressable accessibilityRole="link" accessibilityLabel={`Дереккөз: ${video.title}`} onPress={() => open(video.source)} style={{ paddingHorizontal: s(15), paddingBottom: s(12), alignSelf: 'flex-end' }}><Text style={{ color: '#3fa99a', fontSize: s(11) }}>Дереккөз ↗</Text></Pressable>
         </View>)}

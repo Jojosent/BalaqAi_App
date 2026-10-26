@@ -1,6 +1,9 @@
+import { useLanguage } from '../i18n/Language';
+import { getLocale } from '../i18n/core';
+import { Pressable, Text, Image, View } from '../i18n/Localized';
 import { useEffect, useRef, useState, type ComponentRef } from 'react';
 import { router } from 'expo-router';
-import { Image, Linking, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Linking, ScrollView, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Svg, { Defs, Ellipse, LinearGradient, Path, Stop } from 'react-native-svg';
 import { useAuthFlow } from '../components/AuthFlow';
@@ -11,6 +14,7 @@ import { calculatePregnancy, kazakhDate } from '../utils/pregnancy';
 import { pregnancyTrimester, trackerArticle, trackerIllustration, trackerMeasurements, TRACKER_SOURCES } from '../utils/tracker';
 
 export default function TrackerScreen() {
+  useLanguage();
   const { pageWidth, s } = useAuthSize();
   const insets = useSafeAreaInsets();
   const { pregnancyStart } = useAuthFlow();
@@ -55,7 +59,7 @@ export default function TrackerScreen() {
       {result ? <>
         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: s(15) }}><Text style={{ color: '#4ab9a8', fontSize: s(21), fontWeight: '700' }}>{result.weeks} апта {result.days} күн</Text><Text style={{ color: '#4ab9a8', fontSize: s(15), fontWeight: '600' }}>{pregnancyTrimester(result.totalDays)}-триместр</Text></View>
         <View accessibilityRole="progressbar" aria-valuemin={0} aria-valuemax={280} aria-valuenow={Math.min(280, result.totalDays)} style={{ height: s(7), backgroundColor: '#eaf7f3', borderRadius: s(6), marginVertical: s(18), overflow: 'hidden' }}><View style={{ width: `${result.progress * 100}%`, height: '100%', backgroundColor: '#4ab9a8', borderRadius: s(6) }} /></View>
-        <View style={{ flexDirection: 'row', gap: s(10), justifyContent: 'space-between' }}><Text style={{ color: '#4ab9a8', flex: 1, fontSize: s(12), lineHeight: s(16), fontWeight: '600' }}>Болжамды босану күні:{'\n'}{kazakhDate(result.due)}</Text><Text style={{ color: '#4ab9a8', fontSize: s(12), lineHeight: s(17) }}>{Math.floor(remaining / 7)} апта {remaining % 7} күн қалды</Text></View>
+        <View style={{ flexDirection: 'row', gap: s(10), justifyContent: 'space-between' }}><Text style={{ color: '#4ab9a8', flex: 1, fontSize: s(12), lineHeight: s(16), fontWeight: '600' }}>Болжамды босану күні:{'\n'}{kazakhDate(result.due, getLocale())}</Text><Text style={{ color: '#4ab9a8', fontSize: s(12), lineHeight: s(17) }}>{Math.floor(remaining / 7)} апта {remaining % 7} күн қалды</Text></View>
       </> : <><Text style={{ color: '#4ab9a8', fontSize: s(17), marginBottom: s(15), textAlign: 'center' }}>Жүктілік мерзімі әлі енгізілмеген</Text><PrimaryButton title="Мерзімді енгізу" onPress={() => router.push('/pregnancy-dating')} /></>}
     </View>
     {cards.map((card, index) => <View key={card.id} style={{ backgroundColor: index === 1 ? '#fff' : '#289e8e', borderRadius: s(28), paddingHorizontal: s(21), paddingTop: s(20), paddingBottom: s(25), marginTop: s(-5) }}>

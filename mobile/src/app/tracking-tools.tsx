@@ -1,5 +1,6 @@
+import { Pressable, Text, Image, View } from '../i18n/Localized';
 import { router } from 'expo-router';
-import { Image, Pressable, ScrollView, Text, View } from 'react-native';
+import { ScrollView } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Svg, { Defs, LinearGradient, Path, Rect, Stop } from 'react-native-svg';
 import { useAuthSize } from '../components/AuthUI';

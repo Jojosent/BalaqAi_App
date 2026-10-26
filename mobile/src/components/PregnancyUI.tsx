@@ -1,5 +1,8 @@
+import { useLanguage } from '../i18n/Language';
+import { getLocale } from '../i18n/core';
+import { Text, Image, View } from '../i18n/Localized';
 import { useEffect, useState } from 'react';
-import { Image, Text, View } from 'react-native';
+
 import Svg, { Path } from 'react-native-svg';
 import { todayKey, kazakhDate, calculatePregnancy } from '../utils/pregnancy';
 
@@ -14,9 +17,10 @@ export function CalendarIcon({ size = 22 }: { size?: number }) {
 }
 
 export function BabySummary({ result, scale }: { result: NonNullable<ReturnType<typeof calculatePregnancy>>; scale: number }) {
+  useLanguage();
   return <View style={{ width: '100%', flexDirection: 'row', alignItems: 'center', gap: 14 * scale, padding: 12 * scale, borderRadius: 26 * scale, backgroundColor: '#effaf7', marginTop: 10 * scale }}>
     <Image source={require('../../assets/images/baby1.png')} resizeMode="contain" accessibilityLabel="Сәбидің иллюстрациясы" style={{ width: 79 * scale, height: 79 * scale }} />
-    <View style={{ flex: 1 }}><Text style={{ fontSize: 13 * scale, color: '#174e49', fontWeight: '600', lineHeight: 18 * scale }}>{result.weeks} апта {result.days} күн</Text><Text style={{ fontSize: 11 * scale, color: '#839793', marginTop: 7 * scale }}>Болжамды босану күні:</Text><Text style={{ fontSize: 14 * scale, color: '#21a798', fontWeight: '600', marginTop: 5 * scale }}>{kazakhDate(result.due)}</Text></View>
+    <View style={{ flex: 1 }}><Text style={{ fontSize: 13 * scale, color: '#174e49', fontWeight: '600', lineHeight: 18 * scale }}>{result.weeks} апта {result.days} күн</Text><Text style={{ fontSize: 11 * scale, color: '#839793', marginTop: 7 * scale }}>Болжамды босану күні:</Text><Text style={{ fontSize: 14 * scale, color: '#21a798', fontWeight: '600', marginTop: 5 * scale }}>{kazakhDate(result.due, getLocale())}</Text></View>
   </View>;
 }
 

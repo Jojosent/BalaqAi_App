@@ -37,9 +37,10 @@ export function draftStart(draft: PregnancyDraft, reference = todayKey()): strin
   return dateKey(referenceTime - (weeks * 7 + days) * DAY);
 }
 const months = ['қаңтар', 'ақпан', 'наурыз', 'сәуір', 'мамыр', 'маусым', 'шілде', 'тамыз', 'қыркүйек', 'қазан', 'қараша', 'желтоқсан'];
-export function kazakhDate(key: string) {
+export function kazakhDate(key: string, locale = 'kk-KZ') {
   const timestamp = parseDate(key);
   if (timestamp === null) return '';
   const date = new Date(timestamp);
+  if (locale !== 'kk-KZ') return new Intl.DateTimeFormat(locale, { timeZone: 'UTC', day: 'numeric', month: 'long', year: 'numeric' }).format(date);
   return `${date.getUTCDate()} ${months[date.getUTCMonth()]} ${date.getUTCFullYear()}`;
 }

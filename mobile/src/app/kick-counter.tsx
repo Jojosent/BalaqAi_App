@@ -1,19 +1,23 @@
+import { useLanguage } from '../i18n/Language';
+import { getLocale } from '../i18n/core';
+import { Pressable, Text, Image, View } from '../i18n/Localized';
 import { useEffect, useState } from 'react';
 import { router } from 'expo-router';
-import { Image, Linking, Pressable, ScrollView, Text, View } from 'react-native';
+import { Linking, ScrollView } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useAuthFlow } from '../components/AuthFlow';
 import { Notice, useAuthSize } from '../components/AuthUI';
 import { durationText, kickElapsed, KICK_SESSION_MS, normalizeKickSessions, type KickSession } from '../utils/kicks';
 
-const timeText = (time: number) => new Intl.DateTimeFormat('kk-KZ', { hour: '2-digit', minute: '2-digit' }).format(new Date(time));
+const timeText = (time: number) => new Intl.DateTimeFormat(getLocale(), { hour: '2-digit', minute: '2-digit' }).format(new Date(time));
 function dateText(time: number, now: number) {
   const date = new Date(time), today = new Date(now);
   const sameDay = date.getFullYear() === today.getFullYear() && date.getMonth() === today.getMonth() && date.getDate() === today.getDate();
-  return `${sameDay ? 'Бүгін' : new Intl.DateTimeFormat('kk-KZ', { day: '2-digit', month: 'short' }).format(date)} ${timeText(time)}`;
+  return `${sameDay ? 'Бүгін' : new Intl.DateTimeFormat(getLocale(), { day: '2-digit', month: 'short' }).format(date)} ${timeText(time)}`;
 }
 
 export default function KickCounterScreen() {
+  useLanguage();
   const { s, pageWidth } = useAuthSize();
   const insets = useSafeAreaInsets();
   const { kickSessions, updateKicks, syncStatus, saveNow } = useAuthFlow();

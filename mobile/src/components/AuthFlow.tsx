@@ -5,6 +5,7 @@ import { useSession } from './Session';
 import { normalizeCustomTasks, type TaskGroupId } from '../utils/tasks';
 import { updateKickSessions, type KickAction, type KickSession } from '../utils/kicks';
 import { loadKickSessions, saveKickSessions } from '../services/kicks';
+import { syncSharedSummary } from '../services/sharing';
 import { loadCustomTasks, saveCustomTasks } from '../services/tasks';
 export type LifeStage = 'pregnant' | 'planning' | 'postpartum';
 const empty: SavedData = { profile: { name: '', birthday: '', city: '' }, stage: null, pregnancyStart: null, pregnancyNotes: { doctor: '', notes: '' }, checklist: [], trackingFolate: false };
@@ -59,7 +60,7 @@ export function AuthFlowProvider({ children }: PropsWithChildren) {
       const { kickSessions = [], customTasks, ...profileData } = snapshot;
       const before = JSON.parse(lastSaved.current || '{}') as FlowData;
       const { kickSessions: previousKicks = [], customTasks: previousTasks, ...previousProfile } = before;
-      if (JSON.stringify(profileData) !== JSON.stringify(previousProfile)) await saveUserData(profileData, user.uid);
+      if (JSON.stringify(profileData) !== JSON.stringify(previousProfile)) { await saveUserData(profileData, user.uid); await syncSharedSummary(user.uid, profileData); }
       await saveKickSessions(user.uid, kickSessions, previousKicks);
       await saveCustomTasks(user.uid, normalizeCustomTasks(customTasks), normalizeCustomTasks(previousTasks));
       lastSaved.current = serialized;

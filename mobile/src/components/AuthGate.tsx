@@ -1,6 +1,9 @@
+import { Pressable, Text } from '../i18n/Localized';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { pendingInviteKey, validInviteId } from '../services/sharing';
 import { useEffect } from 'react';
 import { router, usePathname } from 'expo-router';
-import { ActivityIndicator, Pressable, Text, View } from 'react-native';
+import { ActivityIndicator, View } from 'react-native';
 import { useSession } from './Session';
 import { useAuthFlow } from './AuthFlow';
 
@@ -11,9 +14,11 @@ export function AuthGate() {
   const path = usePathname();
   useEffect(() => {
     if (!ready) return;
-    if (!user) { if (!publicPaths.includes(path) || path === '/verify') router.replace('/login'); return; }
+    if (!user) { if (path !== '/connect' && !publicPaths.includes(path) || path === '/verify') router.replace('/login'); return; }
     if (!dataReady) return;
-    if (publicPaths.includes(path)) router.replace(!profile.birthday || !profile.city || !profile.name ? '/profile' : !stage ? '/stage' : stage === 'pregnant' && !pregnancyStart ? '/pregnancy-dating' : '/home');
+    let live = true;
+    if (publicPaths.includes(path)) void AsyncStorage.getItem(pendingInviteKey).then(invite => { if (!live) return; if (invite && validInviteId(invite)) { router.replace({ pathname: '/connect', params: { invite } }); return; } router.replace(!profile.birthday || !profile.city || !profile.name ? '/profile' : !stage ? '/stage' : stage === 'pregnant' && !pregnancyStart ? '/pregnancy-dating' : '/home'); }).catch(() => router.replace('/home'));
+    return () => { live = false; };
   }, [user, ready, dataReady, path, profile, stage, pregnancyStart]);
   if (ready && (!user || dataReady)) return null;
   return <View style={{ position: 'absolute', inset: 0, backgroundColor: '#e9f6f2', alignItems: 'center', justifyContent: 'center', padding: 30 }}>

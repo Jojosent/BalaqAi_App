@@ -1,3 +1,4 @@
+import { useSvgId } from './useSvgId';
 import { useLanguage } from '../i18n/Language';
 import { Pressable, Text, TextInput, Image, View } from '../i18n/Localized';
 import { useState } from 'react';
@@ -25,6 +26,7 @@ const details: Record<string, { title: string; body: string; source?: string }> 
 };
 
 export function PregnancyHeader({ onSearch, scale: s, planning = false }: { onSearch: () => void; scale: (n: number) => number; planning?: boolean }) {
+  const heroId = useSvgId('home-hero');
   const { pregnancyStart } = useAuthFlow();
   const today = useToday();
   const result = pregnancyStart ? calculatePregnancy(pregnancyStart, today) : null;
@@ -34,13 +36,13 @@ export function PregnancyHeader({ onSearch, scale: s, planning = false }: { onSe
   const height = s(planning ? 115 : 324) + Math.max(0, top - s(42));
   const radius = 79, circumference = 2 * Math.PI * radius;
   return <View style={{ height, width: '100%', paddingTop: top }}>
-    <Svg width={pageWidth} height={height} style={StyleSheet.absoluteFill} viewBox={`0 0 ${pageWidth} ${height}`}><Defs><LinearGradient id="hero" x1="0" y1="0" x2="1" y2="1"><Stop offset="0" stopColor="#4ebeb1" /><Stop offset="1" stopColor="#007366" /></LinearGradient></Defs><Path d={`M0 0H${pageWidth}V${height - s(18)}Q${pageWidth / 2} ${height + s(18)} 0 ${height - s(22)}Z`} fill="url(#hero)" /></Svg>
+    <Svg pointerEvents="none" width={pageWidth} height={height} style={StyleSheet.absoluteFill} viewBox={`0 0 ${pageWidth} ${height}`}><Defs><LinearGradient id={heroId} x1="0" y1="0" x2="1" y2="1"><Stop offset="0" stopColor="#4ebeb1" /><Stop offset="1" stopColor="#007366" /></LinearGradient></Defs><Path d={`M0 0H${pageWidth}V${height - s(18)}Q${pageWidth / 2} ${height + s(18)} 0 ${height - s(22)}Z`} fill="#087f70" /><Path d={`M0 0H${pageWidth}V${height - s(18)}Q${pageWidth / 2} ${height + s(18)} 0 ${height - s(22)}Z`} fill={`url(#${heroId})`} /></Svg>
     <Text accessibilityRole="header" style={{ textAlign: 'center', color: '#fff', fontSize: s(20), fontWeight: '600', letterSpacing: 1 }}>Басты бет</Text>
     <Pressable accessibilityRole="button" accessibilityLabel="Іздеуді ашу" onPress={onSearch} style={{ position: 'absolute', right: s(8), top: top - s(6), width: 44, height: 44, alignItems: 'center', justifyContent: 'center' }}><MainIcon name="search" color="#fff" size={s(22)} /></Pressable>
     {!planning ? <><View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: s(22), paddingHorizontal: s(12) }}>
       <View style={{ flex: 1, alignItems: 'center' }}><Text style={ [styles.headerStat, { fontSize: s(20) }] }>{result ? `${(result.progress * 100).toFixed(1)}%` : '—'}</Text><Text style={[styles.headerCaption, { fontSize: s(8) }]}>өтті</Text></View>
       <View accessibilityLabel={result ? `${result.weeks} апта ${result.days} күн` : 'Мерзім енгізілмеген'} style={{ width: s(166), height: s(166), alignItems: 'center', justifyContent: 'center' }}>
-        <Svg width={s(166)} height={s(166)} viewBox="0 0 166 166" style={StyleSheet.absoluteFill}><Circle cx="83" cy="83" r={radius} fill="none" stroke="#66c7b9" strokeOpacity={0.55} strokeWidth={2.5} /><Circle cx="83" cy="83" r={radius} fill="none" stroke="#fff" strokeWidth={2.5} strokeDasharray={`${circumference}`} strokeDashoffset={circumference * (1 - (result?.progress || 0))} transform="rotate(-90 83 83)" /></Svg>
+        <Svg pointerEvents="none" width={s(166)} height={s(166)} viewBox="0 0 166 166" style={StyleSheet.absoluteFill}><Circle cx="83" cy="83" r={radius} fill="none" stroke="#66c7b9" strokeOpacity={0.55} strokeWidth={2.5} /><Circle cx="83" cy="83" r={radius} fill="none" stroke="#fff" strokeWidth={2.5} strokeDasharray={`${circumference}`} strokeDashoffset={circumference * (1 - (result?.progress || 0))} transform="rotate(-90 83 83)" /></Svg>
         <Text style={{ color: '#e7fcf7', fontSize: s(10), fontWeight: '600', letterSpacing: 1 }}>АПТА</Text><Text style={{ color: '#fff', fontSize: s(44), lineHeight: s(55), fontWeight: '700' }}>{result?.weeks ?? '—'}</Text><Text style={{ color: '#e7fcf7', fontSize: s(14), fontWeight: '600' }}>{result ? `+${result.days} күн` : 'мерзімді енгізіңіз'}</Text>
       </View>
       <View style={{ flex: 1, alignItems: 'center' }}><Text style={[styles.headerStat, { fontSize: s(20) }]}>{result ? Math.max(0, 280 - result.totalDays) : '—'}</Text><Text style={[styles.headerCaption, { fontSize: s(8) }]}>күн қалды</Text></View>
@@ -51,9 +53,10 @@ export function PregnancyHeader({ onSearch, scale: s, planning = false }: { onSe
 
 function Banner({ section, s, tracking, onPress }: { section: typeof sections[number]; s: (value: number) => number; tracking: boolean; onPress: () => void }) {
   const { pageWidth } = useAuthSize();
+  const bannerId = useSvgId('planning-card');
   const width = pageWidth - s(48), height = s(126);
-  return <View style={[styles.banner, { height, borderRadius: s(11) }]}>
-    <Svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} style={StyleSheet.absoluteFill}><Defs><LinearGradient id={`banner-${section.id}`} x1="0" y1="0" x2="1" y2="1"><Stop offset="0" stopColor={section.colors[0]} /><Stop offset="1" stopColor={section.colors[1]} /></LinearGradient></Defs><Path d={`M0 0H${width}V${height}H0Z`} fill={`url(#banner-${section.id})`} />{[0, 1, 2, 3, 4].map(i => <Circle key={i} cx={s([12, 94, 215, 33, 174][i])} cy={s([54, 19, 43, 113, 107][i])} r={s([9, 11, 8, 13, 10][i])} fill="none" stroke="white" strokeOpacity={0.2} strokeWidth={s(2)} />)}</Svg>
+  return <View style={[styles.banner, { height, borderRadius: s(11), backgroundColor: section.colors[1] }]}>
+    <Svg pointerEvents="none" width={width} height={height} viewBox={`0 0 ${width} ${height}`} style={StyleSheet.absoluteFill}><Defs><LinearGradient id={bannerId} x1="0" y1="0" x2="1" y2="1"><Stop offset="0" stopColor={section.colors[0]} /><Stop offset="1" stopColor={section.colors[1]} /></LinearGradient></Defs><Path d={`M0 0H${width}V${height}H0Z`} fill={`url(#${bannerId})`} />{[0, 1, 2, 3, 4].map(i => <Circle key={i} cx={s([12, 94, 215, 33, 174][i])} cy={s([54, 19, 43, 113, 107][i])} r={s([9, 11, 8, 13, 10][i])} fill="none" stroke="white" strokeOpacity={0.2} strokeWidth={s(2)} />)}</Svg>
     <Image source={section.image} accessible={false} resizeMode="contain" style={{ position: 'absolute', right: section.id === 'specialists' ? s(-26) : s(-4), bottom: section.id === 'screening' ? s(-4) : 0, width: s(section.id === 'specialists' ? 178 : 130), height: s(section.id === 'screening' ? 99 : section.id === 'specialists' ? 146 : 132) }} />
     <View style={{ position: 'absolute', left: s(22), bottom: s(11), right: s(10), alignItems: 'flex-start' }}><Text style={{ color: '#071f1d', fontSize: s(20), lineHeight: s(26), fontWeight: '500', maxWidth: s(245), marginBottom: s(13) }}>{section.title}</Text><Pressable accessibilityRole="button" accessibilityLabel={section.title.replace('\n', ' ')} onPress={onPress} style={({ pressed }) => ({ backgroundColor: '#fff', borderRadius: s(23), minHeight: 32, paddingHorizontal: s(section.id === 'screening' ? 18 : 23), justifyContent: 'center', opacity: pressed ? 0.75 : 1 })}><Text style={{ color: section.id === 'screening' ? '#9975e8' : section.id === 'specialists' ? '#44c9f4' : '#40aa9e', fontSize: s(14), fontWeight: '600' }}>{section.id === 'folate' && tracking ? 'Бақылау жүріп жатыр' : section.button}</Text></Pressable></View>
   </View>;

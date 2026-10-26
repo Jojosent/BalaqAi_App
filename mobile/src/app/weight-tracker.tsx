@@ -1,3 +1,4 @@
+import { useSvgId } from '../components/useSvgId';
 import { useLanguage } from '../i18n/Language';
 import { getLocale } from '../i18n/core';
 import { Pressable, Text, TextInput, Image, View } from '../i18n/Localized';
@@ -15,6 +16,7 @@ import { addWeightEntry, parseWeight, weightText, type WeightEntry, type WeightT
 
 function dayText(at: number) { const date = new Date(at); return date.toDateString() === new Date().toDateString() ? 'Бүгін' : new Intl.DateTimeFormat(getLocale(), { day: '2-digit', month: 'short' }).format(date); }
 export default function WeightTrackerScreen() {
+  const gradientId = useSvgId('weight-fade');
   useLanguage();
   const { s, pageWidth } = useAuthSize();
   const insets = useSafeAreaInsets();
@@ -56,7 +58,7 @@ export default function WeightTrackerScreen() {
     <ScrollView keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false} contentContainerStyle={{ flexGrow: 1, paddingBottom: Math.max(insets.bottom + s(18), s(28)) }}>
       <View style={{ backgroundColor: '#fff3f4', borderBottomLeftRadius: s(25), borderBottomRightRadius: s(25), overflow: 'hidden', paddingTop: Math.max(insets.top + s(14), s(55)), paddingBottom: s(setup ? 57 : 20) }}>
         <Image source={require('../../assets/images/weight-header.png')} accessible={false} resizeMode="contain" style={{ position: 'absolute', right: 0, top: s(-18), width: s(290), height: s(205) }} />
-        <Svg pointerEvents="none" width="100%" height={s(75)} style={{ position: 'absolute', top: s(140) }}><Defs><LinearGradient id="weight-fade" x1="0" y1="0" x2="0" y2="1"><Stop offset="0" stopColor="#fff3f4" stopOpacity={0} /><Stop offset="1" stopColor="#fff3f4" /></LinearGradient></Defs><Rect width="100%" height="100%" fill="url(#weight-fade)" /></Svg>
+        <Svg pointerEvents="none" width="100%" height={s(75)} style={{ position: 'absolute', top: s(140) }}><Defs><LinearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1"><Stop offset="0" stopColor="#fff3f4" stopOpacity={0} /><Stop offset="1" stopColor="#fff3f4" /></LinearGradient></Defs><Rect width="100%" height="100%" fill={`url(#${gradientId})`} /></Svg>
         <Pressable accessibilityRole="button" accessibilityLabel="Бақылау құралдарына оралу" onPress={() => router.canGoBack() ? router.back() : router.replace('/tracking-tools')} style={{ width: s(44), height: s(44), borderRadius: s(25), backgroundColor: '#fff', marginLeft: s(16), alignItems: 'center', justifyContent: 'center' }}><Text style={{ color: '#919191', fontSize: s(34) }}>‹</Text></Pressable>
         <Text accessibilityRole="header" style={{ color: '#030807', fontSize: s(30), fontWeight: '700', marginTop: s(22), paddingHorizontal: s(21) }}>Салмақты бақылау</Text>
         {!setup && loaded ? <View style={{ flexDirection: 'row', marginTop: s(49), marginHorizontal: s(11), gap: s(18), alignItems: 'center' }}><TextInput accessibilityLabel="Жаңа салмақ" placeholder="Жаңа салмақ енгізіңіз (кг)" placeholderTextColor="#aaa" keyboardType="decimal-pad" maxLength={5} editable={!busy} value={current} onChangeText={setCurrent} onSubmitEditing={() => void save()} style={[inputStyle, { flex: 1, fontSize: s(13), paddingHorizontal: s(15) }]} /><Pressable accessibilityRole="button" disabled={busy || currentKg === null} onPress={() => void save()} style={{ backgroundColor: '#49baad', minHeight: s(44), borderRadius: s(27), paddingHorizontal: s(29), justifyContent: 'center', opacity: busy || currentKg === null ? 0.5 : 1 }}><Text style={{ color: '#fff', fontWeight: '600', fontSize: s(16) }}>{busy ? '…' : 'Қосу'}</Text></Pressable></View> : null}

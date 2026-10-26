@@ -1,3 +1,4 @@
+import { useSvgId } from '../components/useSvgId';
 import { useLanguage } from '../i18n/Language';
 import { getLocale } from '../i18n/core';
 import { Pressable, Text, Image, View } from '../i18n/Localized';
@@ -14,6 +15,7 @@ import { calculatePregnancy, kazakhDate } from '../utils/pregnancy';
 import { pregnancyTrimester, trackerArticle, trackerIllustration, trackerMeasurements, TRACKER_SOURCES } from '../utils/tracker';
 
 export default function TrackerScreen() {
+  const gradientId = useSvgId('trackerHero');
   useLanguage();
   const { pageWidth, s } = useAuthSize();
   const insets = useSafeAreaInsets();
@@ -38,14 +40,14 @@ export default function TrackerScreen() {
 
   return <View style={{ flex: 1, backgroundColor: '#d9f1ec', alignItems: 'center' }}><View style={{ width: pageWidth, flex: 1, overflow: 'hidden' }}><ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: Math.max(insets.bottom + s(20), s(30)) }}>
     <View style={{ height: top + s(413), paddingTop: top }}>
-      <Svg width={pageWidth} height={top + s(440)} style={StyleSheet.absoluteFill}><Defs><LinearGradient id="trackerHero" x1="0" y1="0" x2="0" y2="1"><Stop offset="0" stopColor="#4bb9ac" /><Stop offset="0.72" stopColor="#bfe7e1" /><Stop offset="1" stopColor="#bfe7e1" /></LinearGradient></Defs><Path d={`M0 0H${pageWidth}V${top + s(440)}H0Z`} fill="url(#trackerHero)" /></Svg>
+      <Svg pointerEvents="none" width={pageWidth} height={top + s(440)} style={StyleSheet.absoluteFill}><Defs><LinearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1"><Stop offset="0" stopColor="#4bb9ac" /><Stop offset="0.72" stopColor="#bfe7e1" /><Stop offset="1" stopColor="#bfe7e1" /></LinearGradient></Defs><Path d={`M0 0H${pageWidth}V${top + s(440)}H0Z`} fill="#4bb9ac" /><Path d={`M0 0H${pageWidth}V${top + s(440)}H0Z`} fill={`url(#${gradientId})`} /></Svg>
       <Pressable accessibilityRole="button" accessibilityLabel="Басты бетке оралу" onPress={() => router.canGoBack() ? router.back() : router.replace('/home')} style={{ alignSelf: 'flex-start', minHeight: 44, paddingHorizontal: s(10), flexDirection: 'row', alignItems: 'center', gap: s(8) }}><Arrow back size={s(23)} /><Text style={{ color: '#fff', fontSize: s(20), fontWeight: '500' }}>Басты бет</Text></Pressable>
       <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginTop: s(18), paddingHorizontal: s(13) }}>
         {[{ value: measures.weight === null ? '—' : `≈${measures.weight} г`, label: 'Салмағы' }, { value: measures.length === null ? '—' : `≈${measures.length} см`, label: 'Ұзындығы' }].map(tile => <View key={tile.label} style={{ borderRadius: s(14), padding: s(10), minWidth: s(87), minHeight: s(82), backgroundColor: '#ffffff1f', justifyContent: 'space-between' }}><Text style={{ color: '#fff', fontSize: s(22), fontWeight: '600' }}>{tile.value}</Text><Text style={{ color: '#f2fffa', fontSize: s(13), fontWeight: '600', marginTop: s(11) }}>{tile.label}</Text></View>)}
       </View>
       <View style={{ position: 'absolute', alignSelf: 'center', top: top + s(112), width: s(230), height: s(205), alignItems: 'center', justifyContent: 'center' }}>
         <Image key={illustration} source={illustration === 'baby' ? require('../../assets/images/baby2.png') : require('../../assets/images/moon.png')} resizeMode="contain" accessibilityLabel={illustration === 'baby' ? '20 аптадан бастап сәбидің иллюстрациясы' : '20 аптаға дейінгі ай иллюстрациясы'} style={{ width: s(illustration === 'baby' ? 223 : 172), height: s(illustration === 'baby' ? 185 : 172) }} />
-        <Svg width={s(150)} height={s(18)} style={{ marginTop: s(7) }}><Ellipse cx={s(75)} cy={s(9)} rx={s(53)} ry={s(4)} fill="#59a99d" fillOpacity={0.45} /></Svg>
+        <Svg pointerEvents="none" width={s(150)} height={s(18)} style={{ marginTop: s(7) }}><Ellipse cx={s(75)} cy={s(9)} rx={s(53)} ry={s(4)} fill="#59a99d" fillOpacity={0.45} /></Svg>
       </View>
       <View style={{ position: 'absolute', left: 0, right: 0, bottom: s(35) }}>
         <ScrollView ref={weeksRef} horizontal onContentSizeChange={() => weeksRef.current?.scrollTo({ x: selectedWeek * step, animated: false })} showsHorizontalScrollIndicator={false} contentContainerStyle={{ paddingHorizontal: (pageWidth - itemWidth) / 2, gap: s(12), alignItems: 'center' }}>
@@ -63,7 +65,7 @@ export default function TrackerScreen() {
       </> : <><Text style={{ color: '#4ab9a8', fontSize: s(17), marginBottom: s(15), textAlign: 'center' }}>Жүктілік мерзімі әлі енгізілмеген</Text><PrimaryButton title="Мерзімді енгізу" onPress={() => router.push('/pregnancy-dating')} /></>}
     </View>
     {cards.map((card, index) => <View key={card.id} style={{ backgroundColor: index === 1 ? '#fff' : '#289e8e', borderRadius: s(28), paddingHorizontal: s(21), paddingTop: s(20), paddingBottom: s(25), marginTop: s(-5) }}>
-      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: s(10) }}><Text accessibilityRole="header" style={{ color: index === 1 ? '#4ab9a8' : '#fff', fontSize: s(21), fontWeight: '700' }}>{card.title}</Text><Pressable accessibilityRole="button" accessibilityLabel={`${card.title}: толығырақ`} onPress={() => setExpanded(card.id)} style={{ width: 44, height: 44, borderRadius: 24, alignItems: 'center', justifyContent: 'center', backgroundColor: index === 1 ? '#4ab9a8' : '#fff' }}><Svg width={s(21)} height={s(21)} viewBox="0 0 24 24" fill="none"><Path d="m9 4 8 8-8 8" stroke={index === 1 ? '#fff' : '#4ab9a8'} strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round" /></Svg></Pressable></View>
+      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: s(10) }}><Text accessibilityRole="header" style={{ color: index === 1 ? '#4ab9a8' : '#fff', fontSize: s(21), fontWeight: '700' }}>{card.title}</Text><Pressable accessibilityRole="button" accessibilityLabel={`${card.title}: толығырақ`} onPress={() => setExpanded(card.id)} style={{ width: 44, height: 44, borderRadius: 24, alignItems: 'center', justifyContent: 'center', backgroundColor: index === 1 ? '#4ab9a8' : '#fff' }}><Svg pointerEvents="none" width={s(21)} height={s(21)} viewBox="0 0 24 24" fill="none"><Path d="m9 4 8 8-8 8" stroke={index === 1 ? '#fff' : '#4ab9a8'} strokeWidth={2.2} strokeLinecap="round" strokeLinejoin="round" /></Svg></Pressable></View>
       <Text style={{ color: index === 1 ? '#4ab9a8' : '#fff', fontSize: s(13), lineHeight: s(18) }}>{card.body}</Text>
     </View>)}
     <Text style={{ paddingHorizontal: s(22), marginTop: s(15), textAlign: 'center', color: '#608b81', fontSize: s(10), lineHeight: s(15) }}>Өлшемдер — {selectedWeek}-аптаға арналған анықтамалық шамалар, жеке УДЗ нәтижесі емес. Есеп пен дамуды дәрігер нақтылайды. Иллюстрация көркем түрде берілген.</Text>

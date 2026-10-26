@@ -1,3 +1,4 @@
+import { useSvgId } from '../../components/useSvgId';
 import { Pressable, Text, TextInput, Image, View } from '../../i18n/Localized';
 import { useState } from 'react';
 import { Linking, ScrollView, StyleSheet } from 'react-native';
@@ -35,6 +36,7 @@ function ShopPhoto({ crop, width, label }: { crop: Crop; width: number; label?: 
   return <View accessibilityLabel={label} style={{ width, height: crop.height * factor, overflow: 'hidden' }}><Image accessible={false} source={require('../../../assets/images/shop-reference.png')} resizeMode="stretch" style={{ position: 'absolute', width: 750 * factor, height: 1892 * factor, left: -crop.x * factor, top: -crop.y * factor }} /></View>;
 }
 export default function ShopScreen() {
+  const gradientId = useSvgId('shopBanner');
   const { s } = useAuthSize();
   const insets = useSafeAreaInsets();
   const [category, setCategory] = useState('comfort');
@@ -51,8 +53,8 @@ export default function ShopScreen() {
   return <View style={{ flex: 1, backgroundColor: '#fff' }}>
     <View style={{ paddingTop: Math.max(s(40), insets.top + s(10)), paddingBottom: s(15), alignItems: 'center', justifyContent: 'center', minHeight: s(86) }}><Text accessibilityRole="header" style={{ fontSize: s(27), fontWeight: '500', color: '#080808' }}>Дүкен</Text><Pressable accessibilityRole="button" accessibilityLabel={searchOpen ? 'Іздеуді жабу' : 'Тауар іздеу'} onPress={() => { setSearchOpen(!searchOpen); setQuery(''); }} style={{ position: 'absolute', right: s(16), bottom: s(10), width: s(40), height: s(40), alignItems: 'center', justifyContent: 'center' }}><MainIcon name="search" color="#47bbae" size={s(24)} /></Pressable></View>
     {searchOpen ? <TextInput accessibilityLabel="Тауар атауы" placeholder="Тауар атауын енгізіңіз" autoFocus value={query} onChangeText={setQuery} style={{ padding: 13, marginHorizontal: s(12), marginBottom: 10, backgroundColor: '#f1f6f4', borderRadius: 18, fontSize: s(14), color: '#294b43' }} /> : null}
-    <View style={{ marginHorizontal: s(7), height: s(94), borderRadius: s(15), overflow: 'hidden', marginBottom: s(10) }}>
-      <Svg width="100%" height="100%" style={StyleSheet.absoluteFill}><Defs><LinearGradient id="shopBanner" x1="0" y1="0" x2="1" y2="0"><Stop offset="0" stopColor="#afe1dc" /><Stop offset="1" stopColor="#087f70" /></LinearGradient></Defs><Rect width="100%" height="100%" fill="url(#shopBanner)" /></Svg>
+    <View style={{ marginHorizontal: s(7), height: s(94), backgroundColor: '#087f70', borderRadius: s(15), overflow: 'hidden', marginBottom: s(10) }}>
+      <Svg pointerEvents="none" width="100%" height="100%" style={StyleSheet.absoluteFill}><Defs><LinearGradient id={gradientId} x1="0" y1="0" x2="1" y2="0"><Stop offset="0" stopColor="#afe1dc" /><Stop offset="1" stopColor="#087f70" /></LinearGradient></Defs><Rect width="100%" height="100%" fill={`url(#${gradientId})`} /></Svg>
       <Image source={require('../../../assets/images/shop-benefits.png')} resizeMode="contain" style={{ position: 'absolute', right: s(3), top: s(3), width: s(92), height: s(83) }} />
       <Text style={{ color: '#fff', fontSize: s(15), lineHeight: s(20), letterSpacing: s(0.6), marginLeft: s(14), marginTop: s(9), width: s(270) }}>BalaqAi мүмкіндіктерін{ '\n' }тегін пайдаланыңыз</Text>
       <Pressable accessibilityRole="button" onPress={() => router.push('/features')} style={{ backgroundColor: '#fff', marginLeft: s(14), marginTop: s(10), width: s(243), minHeight: s(26), borderRadius: s(20), flexDirection: 'row', alignItems: 'center', justifyContent: 'space-evenly' }}><Text style={{ color: '#47bbae', fontSize: s(12), letterSpacing: s(0.9) }}>Мүмкіндіктерді пайдалану</Text><Text style={{ color: '#47bbae', fontSize: s(26), lineHeight: s(25), fontWeight: '700' }}>›</Text></Pressable>

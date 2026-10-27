@@ -7,7 +7,8 @@ import { Image, Pressable, Text, View } from '../i18n/Localized';
 import { useLanguage } from '../i18n/Language';
 import { useAuthFlow } from '../components/AuthFlow';
 import { useAuthSize } from '../components/AuthUI';
-import { HorseBadge, MainIcon } from '../components/MainIcon';
+import { MainIcon } from '../components/MainIcon';
+import { InfoBadge } from '../components/InfoBadge';
 import { useSvgId } from '../components/useSvgId';
 import { prenatalSections, prenatalTaskKey, prenatalSource, type PrenatalSection } from '../data/prenatalTasks';
 
@@ -27,11 +28,11 @@ export function TaskSection({ section, open, onToggle }: { section: PrenatalSect
     </View>
     {open ? <View style={{ gap: s(10) }}>{section.tasks.map(task => {
       const key = prenatalTaskKey(section.id, task.id), checked = checklist.includes(key);
-      return <Pressable key={task.id} accessibilityRole="checkbox" accessibilityLabel={task.title} accessibilityState={{ checked }} aria-checked={checked} onPress={() => toggleChecklist(key)} style={({ pressed }) => ({ backgroundColor: '#fff', borderRadius: s(12), minHeight: s(56), padding: s(13), flexDirection: 'row', alignItems: 'center', gap: s(11), opacity: pressed ? 0.75 : 1 })}>
+      return <View key={task.id} style={{ backgroundColor: '#fff', borderRadius: s(12), minHeight: s(56), padding: s(13), flexDirection: 'row', alignItems: 'center', gap: s(4) }}><Pressable accessibilityRole="checkbox" accessibilityLabel={task.title} accessibilityState={{ checked }} aria-checked={checked} onPress={() => toggleChecklist(key)} style={({ pressed }) => ({ flex: 1, minHeight: 44, flexDirection: 'row', alignItems: 'center', gap: s(11), opacity: pressed ? 0.75 : 1 })}>
         <View style={{ width: s(29), height: s(29), borderRadius: s(16), borderColor: checked ? '#49b9ad' : '#ff9e9a', borderWidth: 1, backgroundColor: checked ? '#49b9ad' : '#fff', alignItems: 'center', justifyContent: 'center' }}>{checked ? <Text style={{ color: '#fff', fontSize: s(21) }}>✓</Text> : null}</View>
         <View style={{ flex: 1 }}><Text style={{ color: checked ? '#85978f' : '#171c19', fontSize: s(12.5), fontWeight: '600', lineHeight: s(16), textDecorationLine: checked ? 'line-through' : 'none' }}>{task.title}</Text>{task.subtitle ? <Text style={{ color: '#626b66', fontSize: s(10), lineHeight: s(14), marginTop: s(2) }}>{task.subtitle}</Text> : null}</View>
-        {task.badge ? <View accessible={false}><HorseBadge /></View> : null}
-      </Pressable>;
+        </Pressable>{task.article ? <InfoBadge topic={task.article} /> : null}
+      </View>;
     })}</View> : null}
   </View>;
 }

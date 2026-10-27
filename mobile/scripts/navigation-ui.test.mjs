@@ -10,13 +10,13 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import ts from 'typescript';
 const require = createRequire(import.meta.url);
 const root = path.resolve(import.meta.dirname, '..', 'src');
-let language = 'kk', buttons = [], history = ['/home'];
+let language = 'kk', buttons = [], history = ['/home'], routeParams = {}, navigations = [];
 const cache = new Map();
 function native(tag) { return function Native({ children, onPress, accessibilityLabel, style, ...props }) { if (onPress) buttons.push({ label: accessibilityLabel || '', onPress, role: props.accessibilityRole, checked: props.accessibilityState?.checked }); return React.createElement(tag, { ...(tag === 'button' ? { type: 'button' } : {}), ...(accessibilityLabel ? { 'aria-label': accessibilityLabel } : {}) }, children); }; }
 const NativeView = native('div'), NativeText = native('span');
 const nativeApi = { View: NativeView, Text: NativeText, TextInput: native('input'), Image: native('div'), Pressable: native('button'), ScrollView: NativeView, Modal: ({ visible, children }) => visible ? children : null, KeyboardAvoidingView: NativeView, Platform: { OS: 'web' }, Linking: {}, Share: {}, useWindowDimensions: () => ({ width: 375, height: 812 }), StyleSheet: { create: styles => styles, absoluteFill: { position: 'absolute', inset: 0 } } };
 const flow = { profile: { name: 'Fixture', birthday: '01.01.1998', city: 'Астана' }, stage: 'pregnant', pregnancyStart: '2026-10-10', pregnancyNotes: { doctor: '', notes: '' }, checklist: [], trackingFolate: false, saveNow: async () => {}, syncStatus: 'saved', toggleChecklist: id => { flow.checklist = flow.checklist.includes(id) ? flow.checklist.filter(item => item !== id) : [...flow.checklist, id]; } };
-const router = { push: value => history.push(typeof value === 'string' ? value : value.pathname), canGoBack: () => history.length > 1, back: () => history.pop(), replace: value => { history[history.length - 1] = value; } };
+const router = { push: value => { navigations.push(value); history.push(typeof value === 'string' ? value : value.pathname); }, canGoBack: () => history.length > 1, back: () => history.pop(), replace: value => { history[history.length - 1] = value; } };
 function load(file) {
  const absolute = path.resolve(file);
  if (cache.has(absolute)) return cache.get(absolute).exports;
@@ -30,7 +30,7 @@ function load(file) {
  function localRequire(name) {
   if (name === 'react-native') return nativeApi;
   if (name === 'react-native-svg') { const names = ['Circle','Defs','LinearGradient','Path','Stop','Rect','Ellipse']; return { __esModule: true, default: ({ accessible: _accessible, ...props }) => React.createElement('svg', props), ...Object.fromEntries(names.map(key => [key, props => React.createElement(key === 'LinearGradient' ? 'linearGradient' : key.toLowerCase(), props)])) }; }
-  if (name === 'expo-router') return { router, useLocalSearchParams: () => ({}) };
+  if (name === 'expo-router') return { router, useLocalSearchParams: () => routeParams };
   if (name === 'react-native-safe-area-context') return { useSafeAreaInsets: () => ({ top: 0, bottom: 0, left: 0, right: 0 }) };
   if (name === 'firebase/firestore' || name === 'expo-clipboard') return {};
   if (name === 'react-native-qrcode-svg') return { __esModule: true, default: () => null };
@@ -49,6 +49,8 @@ const Tools = load(path.join(root, 'app/tracking-tools.tsx')).default;
 const Shop = load(path.join(root, 'app/(main)/shop.tsx')).default;
 const Tasks = load(path.join(root, 'app/tasks.tsx'));
 const prenatal = load(path.join(root, 'data/prenatalTasks.ts'));
+const TaskInfo = load(path.join(root, 'app/task-info.tsx')).default;
+const articles = load(path.join(root, 'data/taskArticles.ts'));
 const Connect = load(path.join(root, 'app/connect.tsx')).default;
 function render(component) { buttons = []; return renderToStaticMarkup(React.createElement(component)); }
 const normalize = text => text.replace(/\s+/g, ' ').trim();
@@ -112,4 +114,33 @@ test('new task cards expand without overwriting personal checklist marks', () =>
   }
  }
  flow.checklist = [];
+});
+
+test('every horse opens its own article without changing the checklist', () => {
+ const core = load(path.join(root, 'i18n/core.ts'));
+ for (const lang of ['kk','ru','en']) {
+  language = lang; flow.checklist = ['todo:first:default:0'];
+  for (const section of prenatal.prenatalSections) {
+   render(() => React.createElement(Tasks.TaskSection, { section, open: true, onToggle: () => {} }));
+   const info = buttons.filter(button => button.label.startsWith(core.translate('Ақпарат', lang) + ':'));
+   assert.equal(info.length, section.tasks.filter(task => task.article).length);
+   for (const button of info) { history = ['/tasks']; button.onPress(); const action = navigations.at(-1); assert.equal(action.pathname, '/task-info'); assert.ok(articles.getTaskArticle(action.params.topic)); assert.deepEqual(flow.checklist, ['todo:first:default:0']); }
+  }
+  flow.stage = 'planning'; render(PlanningHome);
+  const planningInfo = buttons.filter(button => button.label.startsWith(core.translate('Ақпарат', lang) + ':')); assert.equal(planningInfo.length, 8);
+  const ids = new Set();
+  for (const button of planningInfo) { history = ['/home']; button.onPress(); const action = navigations.at(-1); assert.equal(action.pathname, '/task-info'); assert.equal(action.params.from, 'home'); ids.add(action.params.topic); assert.ok(articles.getTaskArticle(action.params.topic)); }
+  assert.equal(ids.size, 8);
+ }
+ flow.stage = 'pregnant'; flow.checklist = [];
+});
+test('article close and acknowledgment return to the same list for every topic and language', () => {
+ const core = load(path.join(root, 'i18n/core.ts'));
+ for (const lang of ['kk','ru','en']) for (const [topic, article] of Object.entries(articles.taskArticles)) {
+  language = lang; routeParams = { topic, from: 'tasks' }; history = ['/tasks','/task-info'];
+  const html = render(TaskInfo); assert.ok(html.includes(core.translate(article.title, lang))); assert.ok(html.includes(core.translate(article.body, lang)));
+  const close = buttons.find(button => button.label === core.translate('Жабу', lang)); assert.ok(close); close.onPress(); assert.deepEqual(history, ['/tasks']);
+  history = ['/tasks','/task-info']; buttons.find(button => button.role === 'button' && !button.label).onPress(); assert.deepEqual(history, ['/tasks']);
+ }
+ routeParams = { topic: 'constructor', from: 'home' }; history = ['/task-info']; const html = render(TaskInfo); assert.ok(html.includes(articles.getTaskArticle('constructor') === null ? load(path.join(root, 'i18n/core.ts')).translate('Ақпарат табылмады', language) : 'unexpected')); buttons.find(button => button.label === core.translate('Жабу', language)).onPress(); assert.deepEqual(history, ['/home']); routeParams = {};
 });

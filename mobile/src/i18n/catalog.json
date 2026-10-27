@@ -3627,5 +3627,90 @@
     "Тапсырмалар тізіміне оралу",
     "Вернуться к списку задач",
     "Back to task list"
+  ],
+  [
+    "I триместрдегі УДЗ-скрининг",
+    "УЗ-скрининг I триместра",
+    "First-trimester ultrasound screening"
+  ],
+  [
+    "Бірінші УДЗ-скрининг 11 аптадан 13 апта 6 күнге дейін жүргізіледі. Дәрігер жүктілік мерзімін, сәбидің дамуын және мойын тұсындағы кеңістікті бағалайды. Бұл өлшем қан талдауы және басқа мәліметтермен бірге қаралады. Скрининг кейбір хромосомалық жағдайлардың ықтималдығын есептейді, бірақ диагноз қоймайды.",
+    "Первый УЗ-скрининг проводят с 11 недель до 13 недель 6 дней. Врач уточняет срок беременности, оценивает развитие малыша и воротниковое пространство. Измерение рассматривают вместе с анализом крови и другими данными. Скрининг оценивает вероятность некоторых хромосомных состояний, но не устанавливает диагноз.",
+    "The first ultrasound screening takes place from 11 weeks to 13 weeks 6 days. It checks pregnancy dates, development and nuchal translucency. This measurement is considered alongside a blood test and other information. Screening estimates the chance of certain chromosomal conditions; it does not establish a diagnosis."
+  ],
+  [
+    "PAPP-A — бірінші триместрдегі біріктірілген скрининг кезінде ана қанында өлшенетін ақуыз. Нәтиже бос β-ХГЧ, УДЗ және ана жасы туралы мәліметтермен бірге бағаланады. Жеке бір көрсеткіш диагноз қоймайды; қорытындыны дәрігер түсіндіреді.",
+    "PAPP-A — белок, который измеряют в крови матери при комбинированном скрининге первого триместра. Результат оценивают вместе со свободным β-ХГЧ, УЗИ и возрастом матери. Отдельный показатель не устанавливает диагноз; заключение объясняет врач.",
+    "PAPP-A is a protein measured in maternal blood during combined first-trimester screening. It is assessed alongside free beta-hCG, ultrasound findings and maternal age. One marker alone does not establish a diagnosis; your clinician explains the combined result."
+  ],
+  [
+    "Бос β-ХГЧ — бірінші триместрдегі қан көрсеткіші. Ол PAPP-A және УДЗ мәліметтерімен бірге хромосомалық жағдайлардың ықтималдығын есептеуге қолданылады. Жеке мән диагноз қоймайды.",
+    "Свободный β-ХГЧ — показатель крови первого триместра. Его оценивают вместе с PAPP-A и УЗИ для расчёта вероятности хромосомных состояний. Отдельное значение не устанавливает диагноз.",
+    "Free beta-hCG is a first-trimester blood marker. It is assessed alongside PAPP-A and ultrasound to estimate the chance of chromosomal conditions. One value alone does not establish a diagnosis."
+  ],
+  [
+    "Екінші УДЗ-скринингте сәбидің дене құрылымдары мен өсуі, плацента және басқа көрсеткіштер бағаланады. Кейбір даму ерекшеліктері осы кезеңде анығырақ көрінеді. Дегенмен УДЗ барлық жағдайды анықтай алмайды. Дәрігер қорытындыны түсіндіріп, қажет болса қосымша тексеруді ұсынады.",
+    "На втором УЗ-скрининге оценивают строение и рост малыша, плаценту и другие показатели. Некоторые особенности развития на этом этапе видны лучше. Однако УЗИ не выявляет все возможные состояния. Врач объяснит заключение и при необходимости предложит дополнительное обследование.",
+    "The second screening scan assesses your baby’s anatomy and growth, the placenta and other findings. Some developmental features are clearer at this stage, but ultrasound cannot detect every condition. Your clinician explains the findings and offers further assessment when needed."
+  ],
+  [
+    "Үшінші УДЗ-скрининг Қазақстанда 30–32 аптаға жоспарланады. Ол ұрықтың дамуын бағалайды. Нақты күнді және қосымша тексерулерді дәрігер анықтайды.",
+    "В Казахстане третий УЗ-скрининг планируют на 30–32 недели для оценки развития плода. Дату и дополнительные обследования определяет врач.",
+    "In Kazakhstan, third-trimester screening is planned for 30–32 weeks to assess fetal development. Your clinician determines the date and any additional assessments."
+  ],
+  [
+    "Фолий қышқылы сәбидің жүйке түтігінің дамуы үшін маңызды. ДДҰ жүктілік кезінде күн сайын 400 мкг фолий қышқылын ұсынады. Кей жағдайларда мөлшер басқаша болады, сондықтан препарат пен дозаны дәрігерден нақтылаңыз. Чек-лист тек қабылдауды белгілеуге арналған.",
+    "Фолиевая кислота важна для развития нервной трубки малыша. ВОЗ рекомендует при беременности 400 мкг фолиевой кислоты ежедневно. В отдельных случаях дозировка отличается, поэтому препарат и дозу уточняйте у врача. Чек-лист служит только для личных отметок о приёме.",
+    "Folic acid supports your baby’s neural tube development. WHO recommends 400 micrograms daily during pregnancy. Some circumstances require a different dose, so confirm the product and dose with your clinician. The checklist is only a personal record of taking it."
+  ],
+  [
+    "Жүктілік кезіндегі мамандар кеңесі денсаулық жағдайын және күтім жоспарын нақтылауға көмектеседі. Қай маманға бару қажет екенін акушер-гинеколог шағымдар, ауру тарихы және тексеру нәтижелері бойынша анықтайды. Қабылдауға алдыңғы қорытындылар мен сұрақтарыңызды дайындаңыз.",
+    "Консультации специалистов помогают уточнить состояние здоровья и план наблюдения. Нужных специалистов определяет акушер-гинеколог с учётом жалоб, истории заболеваний и результатов обследований. Подготовьте к приёму предыдущие заключения и ваши вопросы.",
+    "Specialist consultations help clarify your health needs and care plan. Your obstetric clinician determines which specialists are appropriate based on symptoms, medical history and test results. Bring previous reports and the questions you would like to discuss."
+  ],
+  [
+    "Жұлын бұлшықет атрофиясы — бұлшықет қозғалысын басқаратын жүйке жасушаларына әсер ететін тұқым қуалайтын ауру. Кей адамдар ауру белгісінсіз гендік өзгерісті тасымалдауы мүмкін. Генетик отбасылық тарихты бағалап, тасымалдаушылыққа тест қажет пе екенін түсіндіреді.",
+    "Спинальная мышечная атрофия — наследственное заболевание, затрагивающее нервные клетки, управляющие мышцами. Человек может быть носителем генетического изменения без симптомов. Генетик оценит семейную историю и объяснит, подходит ли тест на носительство.",
+    "Spinal muscular atrophy is an inherited condition affecting nerve cells that control muscles. A person may carry a genetic change without symptoms. A genetics professional can review family history and explain whether carrier testing is appropriate."
+  ],
+  [
+    "Дюшенн бұлшықет дистрофиясы — үдемелі бұлшықет әлсіздігімен байланысты тұқым қуалайтын ауру. Ол дистрофин ақуызын түзетін гендегі өзгерістерге байланысты және көбіне ұлдарда байқалады. Отбасылық тарих пен генетикалық тест мүмкіндігін генетикпен талқылауға болады.",
+    "Мышечная дистрофия Дюшенна — наследственное заболевание с прогрессирующей мышечной слабостью. Оно связано с изменениями гена белка дистрофина и чаще проявляется у мальчиков. Семейную историю и возможность генетического тестирования обсуждают с генетиком.",
+    "Duchenne muscular dystrophy is an inherited condition causing progressive muscle weakness. It is associated with changes in the gene for dystrophin and mainly affects boys. A genetics professional can discuss family history and genetic testing options."
+  ],
+  [
+    "Есту қабілетінің төмендеуі тұқым қуалайтын және тұқым қуаламайтын себептерден болуы мүмкін. Генетикалық тексеру оның кейбір тұқым қуалайтын түрлерін бағалайды, бірақ барлық себепті қамтымайды. Отбасында есту мәселелері болса, дәрігерге айтып, қандай тексеру қажет екенін талқылаңыз.",
+    "Снижение слуха может иметь наследственные и ненаследственные причины. Генетическое исследование оценивает некоторые наследственные формы, но не охватывает все причины. Если в семье есть нарушения слуха, сообщите врачу и обсудите подходящее обследование.",
+    "Hearing loss can have inherited or non-inherited causes. Genetic testing evaluates some inherited forms, but it does not cover every cause. Tell your clinician about hearing problems in the family and discuss which assessment may be appropriate."
+  ],
+  [
+    "Фенилкетонурия — ағзаның фенилаланин аминқышқылын ыдыратуына әсер ететін тұқым қуалайтын зат алмасу ауруы. Оны тасымалдаушылыққа тест және нәрестенің туғаннан кейінгі скринингі әртүрлі мақсатпен анықтайды. Өзіңіздің немесе отбасыңыздың тарихын дәрігермен талқылаңыз.",
+    "Фенилкетонурия — наследственное нарушение обмена аминокислоты фенилаланина. Тест на носительство и скрининг новорождённого после рождения решают разные задачи. Если заболевание встречалось у вас или в семье, обсудите это с врачом.",
+    "Phenylketonuria is an inherited condition affecting the breakdown of the amino acid phenylalanine. Carrier testing and newborn screening after birth serve different purposes. Discuss any personal or family history of the condition with your clinician."
+  ],
+  [
+    "Муковисцидоз — өкпе, ас қорыту және басқа жүйелерге әсер етуі мүмкін тұқым қуалайтын ауру. Ол CFTR геніндегі өзгерістермен байланысты. Тасымалдаушыда ауру белгілері болмауы мүмкін. Тест нәтижесі мен қажет болса серіктесті тексеру мәселесін генетик түсіндіреді.",
+    "Муковисцидоз — наследственное заболевание, которое может затрагивать лёгкие, пищеварение и другие системы. Оно связано с изменениями гена CFTR. У носителя может не быть симптомов. Генетик объяснит результат теста и необходимость обследования партнёра.",
+    "Cystic fibrosis is an inherited condition that can affect the lungs, digestion and other systems. It is associated with changes in the CFTR gene. Carriers may have no symptoms. A genetics professional explains test results and whether partner testing is appropriate."
+  ],
+  [
+    "Генетик отбасылық ауру тарихын, скрининг қорытындыларын және генетикалық тест мүмкіндіктерін талқылайды. Тасымалдаушылыққа тест ата-ананың гендік ерекшеліктерін бағалайды, ал пренаталдық зерттеулердің мақсаты басқа болуы мүмкін. Кеңеске бұрынғы қорытындыларды әкеліп, сұрақтарыңызды дайындаңыз.",
+    "Генетик обсуждает семейную историю, результаты скрининга и возможности генетических тестов. Тест на носительство оценивает генетические особенности родителей; пренатальные исследования могут решать другую задачу. Подготовьте предыдущие заключения и ваши вопросы.",
+    "A genetics professional discusses family history, screening results and genetic testing options. Carrier testing assesses parents’ genetic findings; prenatal tests may serve a different purpose. Bring earlier reports and the questions you would like to discuss."
+  ],
+  [
+    "Ақпарат",
+    "Информация",
+    "Information"
+  ],
+  [
+    "Ақпарат табылмады",
+    "Информация не найдена",
+    "Information not found"
+  ],
+  [
+    "ҚР ДСМ",
+    "МЗ РК",
+    "MoH Kazakhstan"
   ]
 ]

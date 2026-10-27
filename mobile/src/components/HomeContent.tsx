@@ -1,3 +1,4 @@
+import { InfoBadge } from './InfoBadge';
 import { useSvgId } from './useSvgId';
 import { useLanguage } from '../i18n/Language';
 import { Pressable, Text, TextInput, Image, View } from '../i18n/Localized';
@@ -8,7 +9,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Svg, { Circle, Defs, LinearGradient, Path, Stop } from 'react-native-svg';
 import { useAuthFlow } from './AuthFlow';
 import { PrimaryButton, useAuthSize } from './AuthUI';
-import { HorseBadge, MainIcon } from './MainIcon';
+import { MainIcon } from './MainIcon';
 import { useToday } from './PregnancyUI';
 import { calculatePregnancy } from '../utils/pregnancy';
 
@@ -85,7 +86,7 @@ export default function HomeContent() {
           const checked = checklist.includes(key);
           return <View key={row.id} style={[styles.checklistRow, { borderRadius: s(11), paddingLeft: s(7), paddingRight: s(5), minHeight: s(44) }]}>
             <Pressable accessibilityRole="checkbox" accessibilityLabel={row.title} accessibilityState={{ checked }} aria-checked={checked} onPress={() => { if (row.id === 'folate') setTrackingFolate(true); toggleChecklist(key); }} style={{ flex: 1, flexDirection: 'row', alignItems: 'center', gap: s(16), minHeight: 44, paddingVertical: s(7) }}><View style={{ width: s(28), height: s(28), borderRadius: s(15), backgroundColor: checked ? '#51bca9' : '#fff', borderColor: checked ? '#51bca9' : '#ff9d98', borderWidth: 1, justifyContent: 'center', alignItems: 'center' }}>{checked ? <Text style={{ color: '#fff', fontSize: s(18) }}>✓</Text> : null}</View><Text style={{ color: '#333', flex: 1, fontSize: s(11.5), lineHeight: s(16), textDecorationLine: checked ? 'line-through' : 'none' }}>{row.title}</Text></Pressable>
-            <Pressable accessibilityRole="button" accessibilityLabel={`Ақпарат: ${row.title}`} onPress={() => setDetail(section.id)} style={{ width: 40, height: 44, justifyContent: 'center', alignItems: 'center' }}><HorseBadge /></Pressable>
+            <InfoBadge topic={row.id} from="home" />
           </View>;
         })}</View>
       </View>)}

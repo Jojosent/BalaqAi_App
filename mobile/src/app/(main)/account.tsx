@@ -1,3 +1,4 @@
+import { getCityLocation } from '../../data/cityLocations';
 import { useLanguage } from '../../i18n/Language';
 import { getLocale } from '../../i18n/core';
 import { Pressable, Text, TextInput, Image, View } from '../../i18n/Localized';
@@ -30,6 +31,7 @@ export default function AccountScreen() {
   useLanguage();
   const { stage, profile, pregnancyStart, pregnancyNotes, setPregnancyNotes, syncStatus, syncError, saveNow } = useAuthFlow();
   const { user, logout } = useSession();
+  const location = getCityLocation(profile.city);
   const [logoutError, setLogoutError] = useState('');
   async function exitAccount() { try { await saveNow(); await logout(); } catch { setLogoutError('Өзгерістер сақталмады. Байланысты тексеріп, қайта шығыңыз.'); } }
   const { s } = useAuthSize();
@@ -58,6 +60,11 @@ export default function AccountScreen() {
         <Pressable accessibilityRole="button" accessibilityLabel="Жеке ақпаратты өзгерту" onPress={edit} style={{ width: s(85), height: s(85) }}><View style={{ width: s(83), height: s(83), borderRadius: s(45), overflow: 'hidden', backgroundColor: '#e9b9cf' }}><Image source={require('../../../assets/images/mom2.png')} style={{ width: s(86), height: s(107), position: 'absolute', top: s(4), left: 0 }} resizeMode="contain" /></View><View style={[styles.round, { position: 'absolute', right: 0, bottom: 0, width: s(25), height: s(25) }]}><ProfileIcon name="edit" color="#64616a" size={s(15)} /></View></Pressable>
         <View style={{ flex: 1, paddingRight: s(25) }}><Text verbatim={!!profile.name} numberOfLines={2} style={{ fontSize: s(17), fontWeight: '700', color: '#222022' }}>{profile.name || 'Атыңызды енгізіңіз'}</Text><Text style={{ color: '#73717e', fontSize: s(12), marginTop: s(5) }}>{age === null ? 'Жасы енгізілмеген' : `${age} жаста`}</Text>{stage === 'pregnant' ? <Pressable accessibilityRole="button" accessibilityLabel="Жүктілік мерзімін өзгерту" onPress={dating} style={{ flexDirection: 'row', gap: s(5), alignItems: 'center', marginTop: s(11) }}><ProfileIcon name="calendar" color="#777881" size={s(14)} /><Text style={{ color: '#73717e', fontSize: s(11), flexShrink: 1 }}>{pregnancy ? `Жүктіліктің ${pregnancy.weeks}-аптасы` : 'Мерзімді енгізіңіз'}  ›</Text></Pressable> : <Text style={{ color: '#73717e', fontSize: s(11), marginTop: s(11) }}>Жүктілікті жоспарлап жүрмін</Text>}</View>
       </View>
+      {location ? <View style={{ backgroundColor: '#fff', borderRadius: s(17), padding: s(14), marginTop: s(10), gap: s(8) }}>
+        <Text accessibilityRole="header" style={{ color: '#294b43', fontSize: s(14), fontWeight: '700' }}>Қалаңыздағы мекенжайлар</Text>
+        <Text style={{ color: '#389f8f', fontSize: s(13), fontWeight: '600' }}>{location.city}</Text>
+        {location.addresses.map(address => <Text key={address} verbatim style={{ color: '#657a75', fontSize: s(12), lineHeight: s(19) }}>{address}</Text>)}
+      </View> : null}
       {stage === 'pregnant' ? <View style={[styles.card, { padding: s(14), borderRadius: s(17), marginTop: s(9) }]}>
         <View style={styles.between}><Text style={{ fontSize: s(14), fontWeight: '700', color: '#222' }}>Жүктілік сапарыңыз</Text><Pressable accessibilityRole="button" accessibilityLabel="Жүктілік туралы толығырақ" onPress={details}><Text style={{ color: '#ff7b83', fontSize: s(11) }}>Толығырақ ›</Text></Pressable></View>
         <View accessibilityRole="progressbar" accessibilityValue={{ min: 0, max: 100, now: Math.round((pregnancy?.progress || 0) * 100) }} style={{ height: s(14), backgroundColor: '#f6f5f9', borderRadius: s(10), overflow: 'hidden', marginVertical: s(12) }}><View style={{ width: `${(pregnancy?.progress || 0) * 100}%`, height: '100%', backgroundColor: '#40d0b5', borderRadius: s(10) }} /></View>

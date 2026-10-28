@@ -1,3 +1,4 @@
+import { getCityLocation } from '../data/cityLocations';
 import { Pressable, Text, TextInput, Image, View } from '../i18n/Localized';
 import { useState } from 'react';
 import { router, useLocalSearchParams } from 'expo-router';
@@ -29,11 +30,11 @@ export default function ProfileScreen() {
     const nextErrors: typeof errors = {};
     if ((profile.name.match(/\p{L}/gu) || []).length < 2) nextErrors.name = 'Атыңызды енгізіңіз.';
     if (!validBirthday(profile.birthday)) nextErrors.birthday = 'Дұрыс туған күніңізді енгізіңіз.';
-    if (profile.city.trim().length < 2) nextErrors.city = 'Қалаңызды таңдаңыз.';
+    if (!getCityLocation(profile.city)) nextErrors.city = 'Қалаңызды таңдаңыз.';
     setErrors(nextErrors);
     if (Object.keys(nextErrors).length) return;
     Keyboard.dismiss();
-    saveProfile({ ...profile, name: profile.name.trim().replace(/\s+/g, ' '), city: profile.city.trim() });
+    saveProfile({ ...profile, name: profile.name.trim().replace(/\s+/g, ' '), city: getCityLocation(profile.city)!.city });
     if (isEditing) { if (router.canGoBack()) router.back(); else router.replace('/account'); }
     else router.push('/stage');
   }

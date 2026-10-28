@@ -6,8 +6,8 @@ import { useAuthFlow, type LifeStage } from '../components/AuthFlow';
 import { AuthScreen, PrimaryButton, useAuthSize } from '../components/AuthUI';
 
 const options = [
-  { id: 'pregnant' as const, title: 'Жүктімін', description: 'Жүктілік мерзімін бақылап,\nпайдалы ақпарат алыңыз.', image: require('../../assets/images/mom2.png'), background: '#fff6f3', circle: '#f8e3dd', accent: '#cc978d' },
   { id: 'planning' as const, title: 'Жүктілікті жоспарлап жүрмін', description: 'Дайындық кезеңінде қолдау\nмен кеңестер алыңыз.', image: require('../../assets/images/grass1.png'), background: '#effaf6', circle: '#d9f1e9', accent: '#4da89a' },
+  { id: 'pregnant' as const, title: 'Жүктімін', description: 'Жүктілік мерзімін бақылап,\nпайдалы ақпарат алыңыз.', image: require('../../assets/images/mom2.png'), background: '#fff6f3', circle: '#f8e3dd', accent: '#cc978d' },
 ];
 
 export default function StageScreen() {

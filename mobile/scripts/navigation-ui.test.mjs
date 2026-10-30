@@ -10,11 +10,12 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import ts from 'typescript';
 const require = createRequire(import.meta.url);
 const root = path.resolve(import.meta.dirname, '..', 'src');
+let openedUrls = [];
 let language = 'kk', buttons = [], history = ['/home'], routeParams = {}, navigations = [];
 const cache = new Map();
 function native(tag) { return function Native({ children, onPress, accessibilityLabel, style, ...props }) { if (onPress) buttons.push({ label: accessibilityLabel || '', onPress, role: props.accessibilityRole, checked: props.accessibilityState?.checked }); return React.createElement(tag, { ...(tag === 'button' ? { type: 'button' } : {}), ...(accessibilityLabel ? { 'aria-label': accessibilityLabel } : {}) }, children); }; }
 const NativeView = native('div'), NativeText = native('span');
-const nativeApi = { View: NativeView, Text: NativeText, TextInput: native('input'), Image: native('div'), Pressable: native('button'), ScrollView: NativeView, Modal: ({ visible, children }) => visible ? children : null, KeyboardAvoidingView: NativeView, Platform: { OS: 'web' }, Linking: {}, Share: {}, useWindowDimensions: () => ({ width: 375, height: 812 }), StyleSheet: { create: styles => styles, absoluteFill: { position: 'absolute', inset: 0 } } };
+const nativeApi = { View: NativeView, Text: NativeText, TextInput: native('input'), Image: native('div'), Pressable: native('button'), ScrollView: NativeView, Modal: ({ visible, children }) => visible ? children : null, KeyboardAvoidingView: NativeView, Platform: { OS: 'web' }, Linking: { openURL: async url => { openedUrls.push(url); } }, Share: {}, useWindowDimensions: () => ({ width: 375, height: 812 }), StyleSheet: { create: styles => styles, absoluteFill: { position: 'absolute', inset: 0 } } };
 const flow = { profile: { name: 'Fixture', birthday: '01.01.1998', city: 'Астана' }, stage: 'pregnant', pregnancyStart: '2026-10-10', pregnancyNotes: { doctor: '', notes: '' }, checklist: [], trackingFolate: false, saveNow: async () => {}, syncStatus: 'saved', toggleChecklist: id => { flow.checklist = flow.checklist.includes(id) ? flow.checklist.filter(item => item !== id) : [...flow.checklist, id]; } };
 const router = { push: value => { navigations.push(value); history.push(typeof value === 'string' ? value : value.pathname); }, canGoBack: () => history.length > 1, back: () => history.pop(), replace: value => { history[history.length - 1] = value; } };
 function load(file) {
@@ -35,7 +36,7 @@ function load(file) {
   if (name === 'firebase/firestore' || name === 'expo-clipboard') return {};
   if (name === 'react-native-qrcode-svg') return { __esModule: true, default: () => null };
   if (name === '@react-native-async-storage/async-storage') return { __esModule: true, default: {} };
-  if (name.startsWith('.')) { const candidate = path.resolve(path.dirname(absolute), name); if (/\.png$/.test(candidate)) return {}; const target = [candidate, candidate + '.ts', candidate + '.tsx', candidate + '.json'].find(p => existsSync(p)); assert.ok(target, candidate); return load(target); }
+  if (name.startsWith('.')) { const candidate = path.resolve(path.dirname(absolute), name); if (/\.(png|jpg)$/.test(candidate)) return {}; const target = [candidate, candidate + '.ts', candidate + '.tsx', candidate + '.json'].find(p => existsSync(p)); assert.ok(target, candidate); return load(target); }
   return require(name);
  }
  const compiled = ts.transpileModule(readFileSync(absolute, 'utf8'), { compilerOptions: { module: ts.ModuleKind.CommonJS, jsx: ts.JsxEmit.ReactJSX, esModuleInterop: true } }).outputText;
@@ -123,7 +124,7 @@ test('every horse opens its own article without changing the checklist', () => {
   for (const section of prenatal.prenatalSections) {
    render(() => React.createElement(Tasks.TaskSection, { section, open: true, onToggle: () => {} }));
    const info = buttons.filter(button => button.label.startsWith(core.translate('Ақпарат', lang) + ':'));
-   assert.equal(info.length, section.tasks.filter(task => task.article).length);
+   assert.equal(info.length, section.tasks.length);
    for (const button of info) { history = ['/tasks']; button.onPress(); const action = navigations.at(-1); assert.equal(action.pathname, '/task-info'); assert.ok(articles.getTaskArticle(action.params.topic)); assert.deepEqual(flow.checklist, ['todo:first:default:0']); }
   }
   flow.stage = 'planning'; render(PlanningHome);
@@ -138,9 +139,44 @@ test('article close and acknowledgment return to the same list for every topic a
  const core = load(path.join(root, 'i18n/core.ts'));
  for (const lang of ['kk','ru','en']) for (const [topic, article] of Object.entries(articles.taskArticles)) {
   language = lang; routeParams = { topic, from: 'tasks' }; history = ['/tasks','/task-info'];
-  const html = render(TaskInfo); assert.ok(html.includes(core.translate(article.title, lang))); assert.ok(html.includes(core.translate(article.body, lang)));
+  const html = render(TaskInfo).replace(/&#x27;/g, "'").replace(/&quot;/g, '"').replace(/&amp;/g, '&'); assert.ok(html.includes(core.translate(article.title, lang)), topic + ' title ' + lang); assert.ok(html.includes(core.translate(article.body, lang)), topic + ' body ' + lang);
   const close = buttons.find(button => button.label === core.translate('Жабу', lang)); assert.ok(close); close.onPress(); assert.deepEqual(history, ['/tasks']);
   history = ['/tasks','/task-info']; buttons.find(button => button.role === 'button' && !button.label).onPress(); assert.deepEqual(history, ['/tasks']);
  }
- routeParams = { topic: 'constructor', from: 'home' }; history = ['/task-info']; const html = render(TaskInfo); assert.ok(html.includes(articles.getTaskArticle('constructor') === null ? load(path.join(root, 'i18n/core.ts')).translate('Ақпарат табылмады', language) : 'unexpected')); buttons.find(button => button.label === core.translate('Жабу', language)).onPress(); assert.deepEqual(history, ['/home']); routeParams = {};
+ routeParams = { topic: 'constructor', from: 'home' }; history = ['/task-info']; const html = render(TaskInfo).replace(/&#x27;/g, "'").replace(/&quot;/g, '"').replace(/&amp;/g, '&'); assert.ok(html.includes(articles.getTaskArticle('constructor') === null ? load(path.join(root, 'i18n/core.ts')).translate('Ақпарат табылмады', language) : 'unexpected')); buttons.find(button => button.label === core.translate('Жабу', language)).onPress(); assert.deepEqual(history, ['/home']); routeParams = {};
+});
+
+const Hospitals = load(path.join(root, 'app/city-hospitals.tsx')).default;
+const cityData = load(path.join(root, 'data/cityLocations.ts'));
+const BottomNav = load(path.join(root, 'components/BottomNav.tsx')).BottomNav;
+const personal = load(path.join(root, 'utils/tasks.ts'));
+test('all personal and prenatal tasks have explanations', () => {
+ for (const group of personal.taskGroups) {
+  assert.ok(articles.getTaskArticle(`personal-${group.id}`)?.body);
+  group.tasks.forEach((_, index) => assert.ok(articles.getTaskArticle(`personal-${group.id}-${index}`)?.body));
+ }
+ for (const section of prenatal.prenatalSections) for (const task of section.tasks) assert.ok(articles.getTaskArticle(task.article));
+});
+test('hospital links use only addresses from the saved city and return to the article', async () => {
+ const previousCity = flow.profile.city;
+ for (const lang of ['kk','ru','en']) for (const city of cityData.cityLocations) {
+  language = lang; flow.profile.city = city.city; history = ['/tasks','/task-info','/city-hospitals']; openedUrls = [];
+  render(Hospitals);
+  const links = buttons.filter(button => button.role === 'link');
+  assert.equal(links.length, city.addresses.length);
+  for (const link of links) { await link.onPress(); const url = new URL(openedUrls.at(-1)); assert.equal(url.origin, 'https://www.google.com'); assert.equal(url.searchParams.get('query'), link.label + ', Kazakhstan'); }
+  buttons.find(button => button.role === 'button').onPress(); assert.deepEqual(history, ['/tasks','/task-info']);
+ }
+ flow.profile.city = 'unknown'; render(Hospitals); assert.equal(buttons.filter(button => button.role === 'link').length, 0);
+ flow.profile.city = previousCity;
+});
+test('bottom menu retains complete translated labels and each destination', () => {
+ const core = load(path.join(root, 'i18n/core.ts'));
+ for (const lang of ['kk','ru','en']) {
+  language = lang; const destinations = [];
+  const html = render(() => React.createElement(BottomNav, { active: 'home', onSelect: name => destinations.push(name) }));
+  const tabs = buttons.filter(button => button.role === 'tab'); assert.equal(tabs.length, 4);
+  for (const label of ['Басты бет','Қауымдастық','Дүкен','Профиль']) assert.ok(html.includes(core.translate(label, lang)));
+  tabs.forEach(button => button.onPress()); assert.deepEqual(destinations, ['home','community','shop','account']);
+ }
 });

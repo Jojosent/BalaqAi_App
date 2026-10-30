@@ -7,7 +7,7 @@ import { Image, Pressable, Text, View } from '../i18n/Localized';
 import { useLanguage } from '../i18n/Language';
 import { useAuthFlow } from '../components/AuthFlow';
 import { useAuthSize } from '../components/AuthUI';
-import { MainIcon } from '../components/MainIcon';
+import { BottomNav, mainTabs } from '../components/BottomNav';
 import { InfoBadge } from '../components/InfoBadge';
 import { useSvgId } from '../components/useSvgId';
 import { prenatalSections, prenatalTaskKey, prenatalSource, type PrenatalSection } from '../data/prenatalTasks';
@@ -57,6 +57,6 @@ export default function TasksScreen() {
         <Pressable accessibilityRole="link" onPress={() => { setSourceError(''); void Linking.openURL(prenatalSource).catch(() => setSourceError('Сілтеме ашылмады. Қайта көріңіз.')); }} style={{ alignSelf: 'center', padding: 10 }}><Text style={{ color: '#246a5d', fontSize: s(11) }}>Медициналық дереккөз ↗</Text></Pressable>{sourceError ? <Text accessibilityRole="alert" style={{ color: '#9e5149' }}>{sourceError}</Text> : null}
       </View>
     </ScrollView>
-    <View style={{ backgroundColor: '#fffffff0', borderTopWidth: 1, borderTopColor: '#e4e8e5', flexDirection: 'row', paddingTop: 9, paddingBottom: Math.max(insets.bottom, 10) }}>{([{ route: '/home', icon: 'home', title: 'Басты бет' }, { route: '/community', icon: 'community', title: 'Қауымдастық' }, { route: '/shop', icon: 'shop', title: 'Дүкен' }, { route: '/account', icon: 'account', title: 'Профиль' }] as const).map(tab => <Pressable key={tab.route} accessibilityRole="button" onPress={() => router.navigate(tab.route)} style={{ flex: 1, alignItems: 'center', justifyContent: 'center', minHeight: 44, gap: 5 }}><MainIcon name={tab.icon} color={tab.icon === 'home' ? '#42bdae' : '#9fa5a2'} size={24} /><Text style={{ fontSize: 10, color: tab.icon === 'home' ? '#42bdae' : '#9fa5a2' }}>{tab.title}</Text></Pressable>)}</View>
+    <BottomNav active="home" onSelect={name => router.navigate(mainTabs.find(tab => tab.name === name)!.route)} />
   </View></View>;
 }

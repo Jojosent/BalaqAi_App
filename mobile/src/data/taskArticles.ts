@@ -1,5 +1,14 @@
+import { taskGroups } from '../utils/tasks';
+import personalDetails from './personalTaskDetails.json';
 export type TaskArticle = { title: string; body: string; source: string; sourceName: string; references?: { url: string; name: string }[] };
+const personalInfo = personalDetails as Record<string, string>;
+const personalArticles = Object.fromEntries(taskGroups.flatMap(group => [
+  [`personal-${group.id}`, { title: group.title, body: personalInfo[`personal-${group.id}`], source: 'https://www.nhs.uk/pregnancy/your-pregnancy-care/your-antenatal-care-and-appointments/', sourceName: 'NHS' }],
+  ...group.tasks.map((title, index) => [`personal-${group.id}-${index}`, { title, body: personalInfo[`personal-${group.id}-${index}`], source: 'https://www.nhs.uk/pregnancy/your-pregnancy-care/your-antenatal-care-and-appointments/', sourceName: 'NHS' }]),
+])) as Record<string, TaskArticle>;
 export const taskArticles: Record<string, TaskArticle> = {
+  ...personalArticles,
+  clinic: { title: 'Алғашқы қабылдауға дайындық', body: "Емханаға хабарласып, алғашқы қабылдауға жазылыңыз. Өзіңізбен бірге жеке куәлігіңізді, бұрынғы зерттеу нәтижелерін және қабылдайтын дәрілер тізімін дайындаңыз. Қажетті мамандар мен тексерулерді дәрігермен бірге жоспарлаңыз.", source: 'https://www.nhs.uk/pregnancy/your-pregnancy-care/your-antenatal-care-and-appointments/', sourceName: 'NHS' },
   "scan-first": {
     "title": "I триместрдегі УДЗ-скрининг",
     "body": "Бірінші УДЗ-скрининг 11 аптадан 13 апта 6 күнге дейін жүргізіледі. Дәрігер жүктілік мерзімін, сәбидің дамуын және мойын тұсындағы кеңістікті бағалайды. Бұл өлшем қан талдауы және басқа мәліметтермен бірге қаралады. Скрининг кейбір хромосомалық жағдайлардың ықтималдығын есептейді, бірақ диагноз қоймайды.",

@@ -23,6 +23,13 @@ type Comment = { id: string; uid: string; author: string; text: string };
 const tabs = ['Ұсынылған', 'Жазылғандар', 'Жаңа'] as const;
 type FeedTab = typeof tabs[number];
 
+export function CommunityTabs({ value, onChange }: { value: FeedTab; onChange: (value: FeedTab) => void }) {
+  const { s } = useAuthSize();
+  return <View accessibilityRole="tablist" style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginBottom: s(20) }}>
+    {tabs.map((item, index) => <Pressable key={item} accessibilityRole="tab" accessibilityLabel={item} accessibilityState={{ selected: item === value }} onPress={() => onChange(item)} style={({ pressed }) => ({ flexBasis: index === 0 ? '100%' : '45%', flexGrow: 1, minWidth: 0, minHeight: 48, paddingHorizontal: 14, paddingVertical: 12, borderRadius: 18, borderWidth: 1, borderColor: item === value ? '#49bcb0' : '#d4e9e2', backgroundColor: item === value ? '#49bcb0' : '#fff', alignItems: 'center', justifyContent: 'center', opacity: pressed ? 0.75 : 1 })}><Text style={{ width: '100%', textAlign: 'center', color: item === value ? '#fff' : '#318f82', fontSize: s(14), lineHeight: s(20), fontWeight: '600' }}>{item}</Text></Pressable>)}
+  </View>;
+}
+
 // Display the supplied reference's photo regions without resampling the original asset.
 function ReferencePhoto({ rect, width, label }: { rect: Rect; width: number; label?: string }) {
   const scale = width / rect.width;
@@ -64,7 +71,7 @@ export default function CommunityScreen() {
   const header = <View>
     <View style={{ flexDirection: 'row', alignItems: 'center', paddingTop: Math.max(s(63), insets.top + s(18)), marginBottom: s(32), gap: s(10) }}><Text accessibilityRole="header" style={{ flex: 1, fontSize: s(29), color: '#080808', fontWeight: '600' }}>Қауымдастық</Text><Pressable accessibilityRole="button" accessibilityLabel={searchOpen ? 'Іздеуді жабу' : 'Қауымдастықтан іздеу'} onPress={() => { setSearchOpen(!searchOpen); setQuery(''); setSavedOnly(false); }} style={styles.iconButton}><MainIcon name="search" color="#47bbae" size={s(24)} /></Pressable></View>
     {searchOpen ? <View style={{ gap: s(10), marginBottom: s(16) }}><TextInput accessibilityLabel="Автор немесе жарияланым іздеу" placeholder="Автор немесе жарияланым іздеу" value={query} onChangeText={setQuery} autoFocus style={[styles.search, { fontSize: s(14) }]} placeholderTextColor="#98a6a2" /><Pressable accessibilityRole="checkbox" accessibilityState={{ checked: savedOnly }} onPress={() => setSavedOnly(!savedOnly)} style={{ flexDirection: 'row', gap: 8, alignItems: 'center', alignSelf: 'flex-start', minHeight: 38 }}><FeedIcon name="bookmark" active={savedOnly} size={18} /><Text style={{ color: '#379e92', fontSize: s(13) }}>Сақталғандар {savedOnly ? '✓' : ''}</Text></Pressable></View> : null}
-    <View accessibilityRole="tablist" style={[styles.tabs, { borderRadius: s(26), padding: s(4), marginBottom: s(20) }]}>{tabs.map(item => <Pressable key={item} accessibilityRole="tab" accessibilityState={{ selected: item === tab }} onPress={() => setTab(item)} style={{ flex: 1, alignItems: 'center', justifyContent: 'center', minHeight: s(36), borderRadius: s(22), backgroundColor: item === tab ? '#49bcb0' : 'transparent' }}><Text style={{ color: item === tab ? '#fff' : '#47bbae', fontSize: s(15), fontWeight: '500' }}>{item}</Text></Pressable>)}</View>
+    <CommunityTabs value={tab} onChange={setTab} />
   </View>;
   return <>
     <FlatList style={{ backgroundColor: '#fbf9f9' }} contentContainerStyle={{ paddingHorizontal: s(22), paddingBottom: s(20) }} data={data} keyExtractor={post => post.id} ListHeaderComponent={header} keyboardShouldPersistTaps="handled" showsVerticalScrollIndicator={false}
@@ -80,7 +87,6 @@ export default function CommunityScreen() {
   </>;
 }
 const styles = StyleSheet.create({
-  tabs: { backgroundColor: '#fff', flexDirection: 'row', boxShadow: '0px 5px 15px rgba(80, 50, 50, 0.1)' },
   card: { backgroundColor: '#fff', overflow: 'hidden', boxShadow: '0px 5px 13px rgba(80, 50, 50, 0.10)' },
   iconButton: { minWidth: 36, minHeight: 36, alignItems: 'center', justifyContent: 'center' },
   metric: { flexDirection: 'row', alignItems: 'center', gap: 4, minHeight: 36 }, count: { fontSize: 12, color: '#929292' },

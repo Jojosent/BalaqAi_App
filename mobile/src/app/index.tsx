@@ -1,3 +1,4 @@
+import { LanguageSelector } from '../components/LanguageSelector';
 import { Pressable, Text, Image, View } from '../i18n/Localized';
 import { router } from 'expo-router';
 import { ScrollView, StyleSheet, useWindowDimensions } from 'react-native';
@@ -23,6 +24,7 @@ export default function WelcomeScreen() {
           <View style={[styles.scene, { minHeight: pageHeight }]}>
             <Image source={require('../../assets/images/background.png')} resizeMode="cover" style={[StyleSheet.absoluteFill, { width: pageWidth, height: pageHeight }]} accessible={false} />
             <View style={[styles.content, { paddingTop: Math.max(s(124), pageHeight * 0.165, insets.top + s(80)), paddingHorizontal: s(42), paddingBottom: Math.max(s(100), insets.bottom + s(30)) }]}>
+              <View style={{ width: '100%', marginBottom: s(18) }}><LanguageSelector compact /></View>
               <Image source={require('../../assets/images/kids.png')} resizeMode="contain" style={{ width: s(205), height: s(137) }} accessibilityLabel="Ұлттық киім киген қыз бен ұл" />
               <Text accessibilityLabel="BalaqAi" style={[styles.wordmark, { fontSize: s(48), lineHeight: s(59), marginTop: s(-8) }]}>Balaq<Text style={styles.ai}>Ai</Text></Text>
               <Text accessibilityRole="header" style={[styles.heading, { fontSize: s(24), lineHeight: s(31), marginTop: s(12), marginHorizontal: s(-12) }]}>BalaqAI-ға қош келдіңіз!</Text>

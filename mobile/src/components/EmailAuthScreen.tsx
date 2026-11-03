@@ -1,3 +1,5 @@
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { LanguageSelector } from './LanguageSelector';
 import { Pressable, Text, TextInput, View } from '../i18n/Localized';
 import { useState } from 'react';
 import { router } from 'expo-router';
@@ -10,6 +12,7 @@ import { AuthScreen, PrimaryButton, RegisterGirl, LoginGirl, SocialButtons, useA
 export function EmailAuthScreen({ mode }: { mode: 'register' | 'login' }) {
   const login = mode === 'login';
   const { s } = useAuthSize();
+  const insets = useSafeAreaInsets();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
@@ -31,7 +34,8 @@ export function EmailAuthScreen({ mode }: { mode: 'register' | 'login' }) {
     } catch (reason) { setError(authError(reason)); }
     finally { setBusy(false); }
   }
-  return <AuthScreen><View style={{ paddingTop: s(95), paddingHorizontal: s(28), alignItems: 'center' }}>
+  return <AuthScreen><View style={{ paddingTop: Math.max(insets.top + s(10), s(40)), paddingHorizontal: s(28), alignItems: 'center' }}>
+    <View style={{ width: '100%', marginBottom: s(14) }}><LanguageSelector compact /></View>
     {login ? <LoginGirl height={s(170)} /> : <RegisterGirl height={s(175)} />}
     <Text accessibilityRole="header" style={{ fontSize: s(login ? 26 : 34), fontWeight: '800', color: '#003f39', textAlign: 'center', marginTop: 8 }}>{login ? 'Қайта қош келдіңіз!' : 'Тіркелу'}</Text>
     <Text style={{ color: '#819692', fontSize: s(14), textAlign: 'center', marginVertical: s(12) }}>{login ? 'Email және құпиясөз арқылы кіріңіз.' : 'Email енгізіп, құпиясөз жасаңыз.'}</Text>
@@ -44,7 +48,7 @@ export function EmailAuthScreen({ mode }: { mode: 'register' | 'login' }) {
     </View>
     <Text style={{ color: '#8aa49d', marginVertical: s(16) }}>Немесе</Text>
     <View style={{ width: '100%' }}><SocialButtons scale={s(1)} onPress={provider => router.push(provider === 'google' ? '/google-accounts' : '/apple-signin')} /></View>
-    <Pressable accessibilityRole="button" onPress={() => router.replace(login ? '/register' : '/login')} style={{ padding: 18 }}><Text style={{ color: '#348e80' }}>{login ? 'Аккаунт жоқ па? Тіркелу' : 'Менде аккаунт бар'}</Text></Pressable>
+    <Pressable accessibilityRole="button" onPress={() => router.replace(login ? '/register' : '/login')} style={({ pressed }) => ({ width: '100%', marginTop: 22, minHeight: 58, flexDirection: 'row', alignItems: 'center', gap: 12, paddingHorizontal: 20, paddingVertical: 15, borderRadius: 20, borderWidth: 1.5, borderColor: '#91c9b9', backgroundColor: pressed ? '#dff2e9' : '#fff', boxShadow: '0px 4px 14px rgba(20,70,57,0.10)' })}><Text style={{ flex: 1, color: '#125c4d', fontSize: 15, lineHeight: 22, fontWeight: '700', textAlign: 'center' }}>{login ? 'Аккаунт жоқ па? Тіркелу' : 'Менде аккаунт бар'}</Text><Text style={{ color: '#248b75', fontSize: 22 }}>→</Text></Pressable>
   </View></AuthScreen>;
 }
 const styles = StyleSheet.create({ input: { backgroundColor: '#fff', borderRadius: 26, minHeight: 50, paddingHorizontal: 18, paddingVertical: 12, fontSize: 15, color: '#174e49' }, password: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#fff', borderRadius: 26 } });

@@ -29,7 +29,7 @@ export default function StageScreen() {
               <Image source={option.image} accessible={false} resizeMode="contain" style={{ width: s(option.id === 'planning' ? 82 : 73), height: s(option.id === 'pregnant' ? 92 : 78), marginTop: s(option.id === 'pregnant' ? 12 : 0) }} />
             </View>
             <View style={{ flex: 1, minWidth: 0 }}>
-              <Text style={[styles.optionTitle, { fontSize: s(option.id === 'planning' ? 11.5 : 14), lineHeight: s(18) }]}>{option.title}</Text>
+              <Text style={[styles.optionTitle, { fontSize: s(14), lineHeight: s(18) }]}>{option.title}</Text>
               <Text style={[styles.optionBody, { fontSize: s(11.5), lineHeight: s(16), marginTop: s(5) }]}>{option.description}</Text>
             </View>
             <View style={{ width: s(29), height: s(29), borderRadius: s(18), backgroundColor: option.circle, alignItems: 'center', justifyContent: 'center' }}>

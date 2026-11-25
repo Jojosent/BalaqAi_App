@@ -1,3 +1,5 @@
+import { RosieAnimation } from './RosieAnimation';
+import { rosieForWeek } from '../utils/rosie';
 import { InfoBadge } from './InfoBadge';
 import { useSvgId } from './useSvgId';
 import { useLanguage } from '../i18n/Language';
@@ -35,6 +37,7 @@ export function PregnancyHeader({ onSearch, scale: s, planning = false }: { onSe
   const insets = useSafeAreaInsets();
   const top = Math.max(insets.top + s(18), s(42));
   const height = s(planning ? 115 : 324) + Math.max(0, top - s(42));
+  const animation = result ? rosieForWeek(Math.min(result.weeks, 42)) : null;
   const radius = 79, circumference = 2 * Math.PI * radius;
   return <View style={{ height, width: '100%', paddingTop: top }}>
     <Svg pointerEvents="none" width={pageWidth} height={height} style={StyleSheet.absoluteFill} viewBox={`0 0 ${pageWidth} ${height}`}><Defs><LinearGradient id={heroId} x1="0" y1="0" x2="1" y2="1"><Stop offset="0" stopColor="#4ebeb1" /><Stop offset="1" stopColor="#007366" /></LinearGradient></Defs><Path d={`M0 0H${pageWidth}V${height - s(18)}Q${pageWidth / 2} ${height + s(18)} 0 ${height - s(22)}Z`} fill="#087f70" /><Path d={`M0 0H${pageWidth}V${height - s(18)}Q${pageWidth / 2} ${height + s(18)} 0 ${height - s(22)}Z`} fill={`url(#${heroId})`} /></Svg>
@@ -44,7 +47,8 @@ export function PregnancyHeader({ onSearch, scale: s, planning = false }: { onSe
       <View style={{ flex: 1, alignItems: 'center' }}><Text style={ [styles.headerStat, { fontSize: s(20) }] }>{result ? `${(result.progress * 100).toFixed(1)}%` : '—'}</Text><Text style={[styles.headerCaption, { fontSize: s(8) }]}>өтті</Text></View>
       <View accessibilityLabel={result ? `${result.weeks} апта ${result.days} күн` : 'Мерзім енгізілмеген'} style={{ width: s(166), height: s(166), alignItems: 'center', justifyContent: 'center' }}>
         <Svg pointerEvents="none" width={s(166)} height={s(166)} viewBox="0 0 166 166" style={StyleSheet.absoluteFill}><Circle cx="83" cy="83" r={radius} fill="none" stroke="#66c7b9" strokeOpacity={0.55} strokeWidth={2.5} /><Circle cx="83" cy="83" r={radius} fill="none" stroke="#fff" strokeWidth={2.5} strokeDasharray={`${circumference}`} strokeDashoffset={circumference * (1 - (result?.progress || 0))} transform="rotate(-90 83 83)" /></Svg>
-        <Text style={{ color: '#e7fcf7', fontSize: s(10), fontWeight: '600', letterSpacing: 1 }}>АПТА</Text><Text style={{ color: '#fff', fontSize: s(44), lineHeight: s(55), fontWeight: '700' }}>{result?.weeks ?? '—'}</Text><Text style={{ color: '#e7fcf7', fontSize: s(14), fontWeight: '600' }}>{result ? `+${result.days} күн` : 'мерзімді енгізіңіз'}</Text>
+        {animation && result ? <><RosieAnimation key={animation} kind={animation} width={s(124)} height={s(124)} label="Сәбидің анимациясы" /><Text style={{ color: '#fff', fontSize: s(12), lineHeight: s(18), fontWeight: '700', textAlign: 'center' }}>{result.weeks} апта {result.days} күн</Text></> : <><Text style={{ color: '#e7fcf7', fontSize: s(10), fontWeight: '600', letterSpacing: 1 }}>АПТА</Text><Text style={{ color: '#fff', fontSize: s(44), lineHeight: s(55), fontWeight: '700' }}>{result?.weeks ?? '—'}</Text><Text style={{ color: '#e7fcf7', fontSize: s(14), fontWeight: '600' }}>{result ? `+${result.days} күн` : 'мерзімді енгізіңіз'}</Text></>}
+
       </View>
       <View style={{ flex: 1, alignItems: 'center' }}><Text style={[styles.headerStat, { fontSize: s(20) }]}>{result ? Math.max(0, 280 - result.totalDays) : '—'}</Text><Text style={[styles.headerCaption, { fontSize: s(8) }]}>күн қалды</Text></View>
     </View>

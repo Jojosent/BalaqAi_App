@@ -19,3 +19,5 @@ At week 20 the 20+ clip takes precedence over the preceding range. The separate 
 - 3dgifmaker-heartbeat.gif → water-drop.webp: transparent animated reminder badge on the tasks card. Transparent margins cropped; full animation retained.
 
 The first-week asset is now replaced by user-supplied ROSIE_week1_transparent (2).gif for weeks 0–4, converted with source colors and transparency unchanged. Filenames retain their prior 1-4 naming for compatibility.
+
+For consistent visual size, weeks 0–4 use a fixed 460×506 crop around the combined non-transparent bounds of all GIF frames (with padding), scaled to 320px width. Motion and transparency retained.

@@ -1,3 +1,4 @@
+import { HydrationReminder } from '../components/HydrationReminder';
 import { useState } from 'react';
 import { router } from 'expo-router';
 import { Linking, ScrollView } from 'react-native';
@@ -50,6 +51,7 @@ export default function TasksScreen() {
       <Pressable accessibilityRole="button" accessibilityLabel="Басты бетке оралу" onPress={() => router.canGoBack() ? router.back() : router.replace('/home')} style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: s(10), minHeight: 44, alignSelf: 'flex-start' }}><Text style={{ color: '#279e90', fontSize: s(29), marginRight: s(5) }}>‹</Text><Text style={{ color: '#279e90', fontSize: s(20) }}>Басты бет</Text></Pressable>
       <Text accessibilityRole="header" style={{ color: '#080c0a', fontSize: s(29), lineHeight: s(36), fontWeight: '700', marginTop: s(13), marginBottom: s(35), paddingHorizontal: s(25) }}>Тапсырмалар тізімі</Text>
       <View style={{ paddingHorizontal: s(24), gap: s(26) }}>{prenatalSections.map(section => <TaskSection key={section.id} section={section} open={expanded.includes(section.id)} onToggle={() => setExpanded(previous => previous.includes(section.id) ? previous.filter(id => id !== section.id) : [...previous, section.id])} />)}
+        <HydrationReminder scale={s} />
         <Pressable accessibilityRole="button" onPress={() => router.push('/personal-tasks')} style={{ backgroundColor: '#ffffffc9', borderRadius: s(15), padding: s(16) }}><Text style={{ color: '#268f81', fontSize: s(14), fontWeight: '600' }}>Жеке тапсырмалар ›</Text></Pressable>
         <Text accessibilityRole="status" style={{ color: syncStatus === 'error' ? '#9e5149' : '#365d52', fontSize: s(11), textAlign: 'center' }}>{syncStatus === 'error' ? syncError : syncStatus === 'saving' ? 'Сақталуда…' : 'Тапсырмалар жеке аккаунтыңызға сақталады.'}</Text>
         {syncStatus === 'error' ? <Pressable accessibilityRole="button" onPress={() => void saveNow().catch(() => {})} style={{ padding: 12, alignItems: 'center' }}><Text style={{ color: '#8d403d' }}>Қайта сақтау</Text></Pressable> : null}

@@ -1,3 +1,5 @@
+import { RosieAnimation } from '../components/RosieAnimation';
+import { rosieForWeek } from '../utils/rosie';
 import { useSvgId } from '../components/useSvgId';
 import { useLanguage } from '../i18n/Language';
 import { getLocale } from '../i18n/core';
@@ -33,6 +35,7 @@ export default function TrackerScreen() {
   const itemWidth = s(56), step = s(68);
   const measures = trackerMeasurements(selectedWeek);
   const illustration = trackerIllustration(selectedWeek);
+  const animation = rosieForWeek(selectedWeek);
   const article = trackerArticle(selectedWeek);
   const remaining = Math.max(0, 280 - (result?.totalDays ?? 0));
   const top = Math.max(s(48), insets.top + s(14));
@@ -48,7 +51,8 @@ export default function TrackerScreen() {
         {[{ value: measures.weight === null ? '—' : `≈${measures.weight} г`, label: 'Салмағы' }, { value: measures.length === null ? '—' : `≈${measures.length} см`, label: 'Ұзындығы' }].filter(() => !birthPreview).map(tile => <View key={tile.label} style={{ borderRadius: s(14), padding: s(10), minWidth: s(87), minHeight: s(82), backgroundColor: '#ffffff1f', justifyContent: 'space-between' }}><Text style={{ color: '#fff', fontSize: s(22), fontWeight: '600' }}>{tile.value}</Text><Text style={{ color: '#f2fffa', fontSize: s(13), fontWeight: '600', marginTop: s(11) }}>{tile.label}</Text></View>)}
       </View>
       <View style={{ position: 'absolute', alignSelf: 'center', top: top + s(112), width: s(230), height: s(205), alignItems: 'center', justifyContent: 'center' }}>
-        <Image key={birthPreview ? 'birth' : illustration} source={birthPreview ? require('../../assets/images/mother-and-baby.png') : illustration === 'baby' ? require('../../assets/images/baby2.png') : require('../../assets/images/illustrated-moon.png')} resizeMode="contain" accessibilityLabel={birthPreview ? 'Ана мен сәби' : illustration === 'baby' ? '20 аптадан бастап сәбидің иллюстрациясы' : '20 аптаға дейінгі ай иллюстрациясы'} style={{ width: s(birthPreview || illustration === 'baby' ? 223 : 172), height: s(birthPreview || illustration === 'baby' ? 185 : 172) }} />
+        {!birthPreview && animation ? <RosieAnimation key={animation} kind={animation} width={s(205)} height={s(205)} label="Сәбидің анимациясы" /> : <Image key={birthPreview ? 'birth' : illustration} source={birthPreview ? require('../../assets/images/mother-and-baby.png') : illustration === 'baby' ? require('../../assets/images/baby2.png') : require('../../assets/images/illustrated-moon.png')} resizeMode="contain" accessibilityLabel={birthPreview ? 'Ана мен сәби' : illustration === 'baby' ? '20 аптадан бастап сәбидің иллюстрациясы' : '20 аптаға дейінгі ай иллюстрациясы'} style={{ width: s(birthPreview || illustration === 'baby' ? 223 : 172), height: s(birthPreview || illustration === 'baby' ? 185 : 172) }} />}
+
         <Svg pointerEvents="none" width={s(150)} height={s(18)} style={{ marginTop: s(7) }}><Ellipse cx={s(75)} cy={s(9)} rx={s(53)} ry={s(4)} fill="#59a99d" fillOpacity={0.45} /></Svg>
       </View>
       <View style={{ position: 'absolute', left: 0, right: 0, bottom: s(35) }}>

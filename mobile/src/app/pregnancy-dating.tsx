@@ -1,4 +1,5 @@
-import { Pressable, Text, TextInput, Image, View } from '../i18n/Localized';
+import { RosieAnimation } from '../components/RosieAnimation';
+import { Pressable, Text, TextInput, View } from '../i18n/Localized';
 import { useState } from 'react';
 import { router, useLocalSearchParams } from 'expo-router';
 import { Keyboard, ScrollView, StyleSheet } from 'react-native';
@@ -32,7 +33,7 @@ export default function PregnancyDatingScreen() {
 
   return <AuthScreen>
     <View style={{ alignItems: 'center', paddingTop: s(96), paddingHorizontal: s(27) }}>
-      <Image source={require('../../assets/images/boy1.png')} accessibilityLabel="Ұлттық киім киген кішкентай ұл" resizeMode="contain" style={{ width: s(145), height: s(132) }} />
+      <RosieAnimation kind="boy" width={s(155)} height={s(160)} label="Ұлттық киім киген кішкентай ұл" />
       <Text accessibilityRole="header" style={[styles.title, { fontSize: s(19), lineHeight: s(26), marginTop: s(7), marginHorizontal: s(-10) }]}>Жүктілік мерзімін анықтайық</Text>
       <Text style={[styles.subtitle, { fontSize: s(12), lineHeight: s(17), marginTop: s(6), marginBottom: s(14) }]}>Дұрыс есептеу үшін келесі әдістердің бірін таңдаңыз.</Text>
       <View accessibilityRole="radiogroup" accessibilityLabel="Есептеу әдісі" style={{ width: '100%', gap: s(10) }}>

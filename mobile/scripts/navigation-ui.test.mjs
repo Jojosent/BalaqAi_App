@@ -36,7 +36,7 @@ function load(file) {
   if (name === 'firebase/firestore' || name === 'expo-clipboard') return {};
   if (name === 'react-native-qrcode-svg') return { __esModule: true, default: () => null };
   if (name === '@react-native-async-storage/async-storage') return { __esModule: true, default: {} };
-  if (name.startsWith('.')) { const candidate = path.resolve(path.dirname(absolute), name); if (/\.(png|jpg)$/.test(candidate)) return {}; const target = [candidate, candidate + '.ts', candidate + '.tsx', candidate + '.json'].find(p => existsSync(p)); assert.ok(target, candidate); return load(target); }
+  if (name.startsWith('.')) { const candidate = path.resolve(path.dirname(absolute), name); if (/\.(png|jpg|webp)$/.test(candidate)) return {}; const target = [candidate, candidate + '.ts', candidate + '.tsx', candidate + '.json'].find(p => existsSync(p)); assert.ok(target, candidate); return load(target); }
   return require(name);
  }
  const compiled = ts.transpileModule(readFileSync(absolute, 'utf8'), { compilerOptions: { module: ts.ModuleKind.CommonJS, jsx: ts.JsxEmit.ReactJSX, esModuleInterop: true } }).outputText;

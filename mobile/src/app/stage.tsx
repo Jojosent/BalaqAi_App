@@ -1,3 +1,4 @@
+import { RosieAnimation } from '../components/RosieAnimation';
 import { Pressable, Text, Image, View } from '../i18n/Localized';
 import { router } from 'expo-router';
 import { StyleSheet } from 'react-native';
@@ -17,7 +18,7 @@ export default function StageScreen() {
 
   return <AuthScreen>
     <View style={{ alignItems: 'center', paddingTop: s(105), paddingHorizontal: s(28) }}>
-      <Image source={require('../../assets/images/boy1.png')} accessibilityLabel="Ұлттық киім киген кішкентай ұл" resizeMode="contain" style={{ width: s(155), height: s(140) }} />
+      <RosieAnimation kind="boy" width={s(155)} height={s(160)} label="Ұлттық киім киген кішкентай ұл" />
       <Text accessibilityRole="header" style={[styles.title, { fontSize: s(25), lineHeight: s(33), marginTop: s(8), marginHorizontal: s(-14) }]}>Қазір қай кезеңдесіз?</Text>
       <Text style={[styles.subtitle, { fontSize: s(12), lineHeight: s(17), marginTop: s(7), marginBottom: s(18) }]}>{'Сізге ыңғайлы әрі жеке ұсыныстар алу\nүшін таңдаңыз.'}</Text>
       <View accessibilityRole="radiogroup" accessibilityLabel="Қазіргі кезеңіңіз" style={{ width: '100%', gap: s(10) }}>
